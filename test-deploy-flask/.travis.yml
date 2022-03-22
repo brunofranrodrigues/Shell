@@ -1,0 +1,23 @@
+language: generic
+addons:
+  ssh_known_hosts: 3.17.200.0
+branches:
+  only:
+  - master
+before_install:
+- openssl aes-256-cbc -K $encrypted_0ddd2445e49f_key -iv $encrypted_0ddd2445e49f_iv
+  -in travis_rsa.enc -out /tmp/travis_rsa -d
+- eval "$(ssh-agent -s)"
+- chmod 600 /tmp/travis_rsa
+- ssh-add /tmp/travis_rsa
+- echo -e "Host 3.17.200.0\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+install:
+- 
+script:
+- 
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: ssh -p22 3.17.200.0 deploy.sh
+  on:
+    all_branches: true
