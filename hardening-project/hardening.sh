@@ -203,7 +203,7 @@ fi
 
 done
 
-if [ $i -ne 0 ]; then
+if [ $i -eq 0 ]; then
 ${ECHO} -e "\033[33;1m[WARNING!]\033[m Script not tested with S.O. version"
 fi
 
