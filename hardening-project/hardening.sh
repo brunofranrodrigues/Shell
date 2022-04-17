@@ -3,7 +3,7 @@
 # ---------------------------------------
 # Environment variables
 # ---------------------------------------
-OS=$OSVERSION
+OSVERSION=""
 MN="-n"
 MC="-e"
 COUNTER=0
@@ -150,7 +150,7 @@ nobody
 vcsa
 saslauth
 postfix
-sshd" 
+sshd"
 
 # ---------------------------------------
 # Filesystem must disable
@@ -176,23 +176,38 @@ CYAN="\033[036m"
 WHITE="\033[037m"
 UNCOLOR="\033[0m"
 
-banner() {
 
-if cat /etc/*release | grep ^NAME | grep CentOS; then
-	OSVERSION=`cat /etc/*release | head -1`
-elif cat /etc/*release | grep ^NAME | grep Red; then
-	OSVERSION=`cat /etc/*release | head -1`
-elif cat /etc/*release | grep ^NAME | grep Fedora; then
-	OSVERSION=`cat /etc/*release | head -1`
-elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
-	OSVERSION=`cat /etc/*release | head -4 | tail -1 | awk -F'=' {' print $2 '}`
-elif cat /etc/*release | grep ^NAME | grep Debian ; then
-	OSVERSION=`cat /etc/*release | head -1 | awk -F'=' {' print $2 '}`
-elif cat /etc/*release | grep ^NAME | grep Oracle ; then
-	OSVERSION=`cat /etc/*release | head -1`
+check_release(){
+
+OSTYPE=`cat /etc/*-release | grep ^NAME | cut -d '"' -f 2 | awk '{print $1}'`
+
+if [[ "$OSTYPE" == "CentOS" ]]; then
+        clear
+        OSVERSION=`cat /etc/*-release | head -1`
+        ${ECHO} $OSVERSION
+elif [[ "$OSTYPE" == "Debian" ]]; then
+        clear
+        OSVERSION=`cat /etc/*-release | head -1 | awk -F'=' {' print $2 '}`
+        ${ECHO} $OSVERSION
+elif [[ "$OSTYPE" == "Ubuntu" ]]; then
+        clear
+        OSVERSION=`cat /etc/*-release | head -4 | tail -1 | awk -F'=' {' print $2 '}`
+        ${ECHO} $OSVERSION
+elif [[ "$OSTYPE" == "Oracle" ]]; then
+        clear
+        OSVERSION=`cat /etc/*-release | head -1`
+        ${ECHO} $OSVERSION
 else
-    echo "OS NOT DETECTED, couldn't verify package"
+        ${ECHO} -e "\033[33;1m[WARNING!]\033[m Script not tested with S.O. version"
+        ${ECHO} $OSVERSION
 fi
+
+export $OSVERSION
+
+}
+
+
+banner() {
 clear
 ${ECHO} ""
 ${ECHO} "----------------------------------------------"
@@ -213,4 +228,5 @@ ${ECHO} ""
 # ---------------------------------------
 # Init
 # ---------------------------------------
+check_release
 banner
