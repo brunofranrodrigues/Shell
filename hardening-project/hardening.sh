@@ -178,31 +178,34 @@ UNCOLOR="\033[0m"
 
 
 check_release(){
+OSTYPE=('CentOS' 'Debian' 'Ubuntu' 'Oracle')
 
-OSTYPE=`cat /etc/*-release | grep ^NAME | cut -d '"' -f 2 | awk '{print $1}'`
+for OSTYPE in $(cat /etc/*-release | grep ^NAME | cut -d '"' -f 2 | awk '{print $1}')
+do
 
 if [[ "$OSTYPE" == "CentOS" ]]; then
-        clear
+        i=1
         OSVERSION=`cat /etc/*-release | head -1`
         ${ECHO} $OSVERSION
 elif [[ "$OSTYPE" == "Debian" ]]; then
-        clear
+        i=1
         OSVERSION=`cat /etc/*-release | head -1 | awk -F'=' {' print $2 '}`
         ${ECHO} $OSVERSION
 elif [[ "$OSTYPE" == "Ubuntu" ]]; then
-        clear
+        i=1
         OSVERSION=`cat /etc/*-release | head -4 | tail -1 | awk -F'=' {' print $2 '}`
         ${ECHO} $OSVERSION
 elif [[ "$OSTYPE" == "Oracle" ]]; then
-        clear
+        i=1
         OSVERSION=`cat /etc/*-release | head -1`
-        ${ECHO} $OSVERSION
-else
-        ${ECHO} -e "\033[33;1m[WARNING!]\033[m Script not tested with S.O. version"
         ${ECHO} $OSVERSION
 fi
 
-export $OSVERSION
+done
+
+if [ $i -ne 0 ]; then
+${ECHO} -e "\033[33;1m[WARNING!]\033[m Script not tested with S.O. version"
+fi
 
 }
 
