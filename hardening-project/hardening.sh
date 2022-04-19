@@ -20,6 +20,7 @@ AWK=`which awk`
 ECHO=`which echo`
 GREP=`which grep`
 EGREP=`which egrep`
+TOUCH=`which touch`
 HEAD=`which head`
 TR=`which tr`
 TAIL=`which tail`
@@ -189,6 +190,14 @@ fi
 chk_remoteroot() {
 # TESTADO
 # Remover login remoto como super-usuario
+$TOUCH /etc/securetty
+cat <<EOF > /etc/securetty
+tty1
+tty2
+tty3
+tty4
+ttyS1
+EOF
 ${ECHO} ${MN} "Checking (Remover login remoto como super-usuario) "
 cmd=$(${GREP} -e "^vc" -e "^console" /etc/securetty)
 [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
