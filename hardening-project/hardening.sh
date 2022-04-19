@@ -176,6 +176,16 @@ CYAN="\033[036m"
 WHITE="\033[037m"
 UNCOLOR="\033[0m"
 
+# ---------------------------------------
+# Functions
+# ---------------------------------------
+
+chk_rootuser() {
+if [[ $UID -ne 0 ]]; then
+     echo "$0 must be run as root"
+     exit 1
+fi
+}
 
 check_release(){
 OSTYPE=('CentOS' 'Debian' 'Ubuntu' 'Oracle')
