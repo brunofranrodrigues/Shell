@@ -486,7 +486,34 @@ chk_motd() {
 # Tested on CentOS 6.2 x64
 # Defina um MOTD para alerta
 ${ECHO} "Checking (Remover motd/issue padrao)  "
+$TOUCH /etc/motd
+cat <<EOF > /etc/motd
+--------------------------------------------------------------------------------
+                        ATENCAO: Aviso Importante
 
+E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
+devidamente controlado, monitorado e de responsabilidade do Universo Online S/A.
+
+Se voce nao possui autorizacao para acessar este recurso, desconecte
+imediatamente ou podera sofrer sancoes legais e/ou acao disciplinar.
+
+Em caso de problemas envie email para l-monitor-sec@uolinc.com
+--------------------------------------------------------------------------------
+EOF
+$TOUCH /etc/issue.net
+cat <<EOF > /etc/issue.net
+--------------------------------------------------------------------------------
+                        ATENCAO: Aviso Importante
+
+E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
+devidamente controlado, monitorado e de responsabilidade do Universo Online S/A.
+
+Se voce nao possui autorizacao para acessar este recurso, desconecte
+imediatamente ou podera sofrer sancoes legais e/ou acao disciplinar.
+
+Em caso de problemas envie email para l-monitor-sec@uolinc.com
+--------------------------------------------------------------------------------
+EOF
 cmd=$(${EGREP} ".*ATENCAO: Aviso Importante" /etc/motd)
 [ $? = 0 ] && ${ECHO} ${MC} " - /etc/motd content ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/motd content ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
 #cmd=$(${EGREP} ".*ATENCAO: Aviso Importante" /etc/issue)
