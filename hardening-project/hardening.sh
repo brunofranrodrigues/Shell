@@ -204,7 +204,7 @@ fi
 done
 
 if [ $i -eq 0 ]; then
-${ECHO} -e "\033[33;1m[WARNING!]\033[m Script not tested with S.O. version"
+Erro="\033[33;1m[WARNING!]\033[m Script not tested with S.O. version"
 fi
 
 }
@@ -215,6 +215,7 @@ clear
 ${ECHO} ""
 ${ECHO} "----------------------------------------------"
 ${ECHO} "LVS - Linux Validate Script - Client Version"
+${ECHO} -e $Erro
 ${ECHO} "----------------------------------------------"
 ${ECHO} ""
 ${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}"
