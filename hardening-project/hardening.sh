@@ -192,11 +192,15 @@ chk_remoteroot() {
 # Remover login remoto como super-usuario
 $TOUCH /etc/securetty
 cat <<EOF > /etc/securetty
+console
 tty1
 tty2
 tty3
 tty4
-ttyS1
+tty5
+tty6
+tty7
+tty8
 EOF
 ${ECHO} ${MN} "Checking (Remover login remoto como super-usuario) "
 cmd=$(${GREP} -e "^vc" -e "^console" /etc/securetty)
