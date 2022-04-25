@@ -3,166 +3,28 @@
 # ---------------------------------------
 # Environment variables
 # ---------------------------------------
+
+i="";
+Erro="Sistema não homologado"
 OSVERSION=""
 MN="-n"
 MC="-e"
-COUNTER=0
-LANG=C
-export LANG
-MAINHOST=`uname ${MN}`
-PWD_DIR=`pwd`
-confirm=$1
-CHATTR=`which chattr`
 CHOWN=`which chown`
+CAT=`which cat`
 CHMOD=`which chmod`
 USERMOD=`which usermod`
 AWK=`which awk`
 ECHO=`which echo`
+FIND=`which find`
 GREP=`which grep`
-EGREP=`which egrep`
 TOUCH=`which touch`
-HEAD=`which head`
-TR=`which tr`
+SED=`which sed`
 TAIL=`which tail`
-GETFACL=`which getfacl`
-LSATTR=`which lsattr`
-PATH=$PATH:/sbin:/bin
-export PATH
-
-# ---------------------------------------
-# LVS settings
-# ---------------------------------------
-HOMEDIR="/home"
-PASS_MIN_LEN="8"    # Tamanho minimo de senha
-PASS_MAX_DAYS="90"  # Tempo maximo para forcar troca de senha
-PASS_MIN_DAYS="1"   # Tempo minimo para troca de senha
-PASS_WARN_AGE="89"  # Tempo para emitir o aviso para troca de senha
-DIFOK="3"           # Quantidade minima de caracteres diferentes em relacao a ultima senha
-DCREDIT="1"         # Quantos digitos devem conter na senha
-LCREDIT="1"         # Quantas letras minusculas devem conter na senha
-UCREDIT="1"         # Quantas letras maiusculas devem conter na senha
-OCREDIT="1"         # Quantos caracteres especiais devem conter na senha
-REMEMBER="4"        # Historico de senhas que nao podem ser utilizadas
-TMOUT="7200"    # Defina o tempo de timeout das sessoes idle no servidor (em segundos) / 86400 = 1 dia
-ALLOWCRON="root"    # Usuarios permitidos para utilizarem o crontab
-SYSLOGSRV="10.154.4.103" # Servidor syslog
-SYSLOGFILE="/etc/rsyslog.conf"         # Arquivo principal do syslog
-HA_PROFILE="cliente"     # (uoldiveo/cliente) Defina o profile do script, 'uoldiveo' para servidores internos e 'cliente' para servidores de clientes
-GRUBCONF="/etc/grub.conf" # Path para o arquivo de configuracao do GRUB
-
-# ---------------------------------------
-# SSH settings
-# ---------------------------------------
-
-ALLOW_EMPTY_PASS="no"          # Permitir senhas em branco (yes/no)
-ALLOW_ROOT_LOGIN="no"          # Permitir login remoto com root (yes/no/without-password)
-IGNORE_RHOSTS="yes"            # Ignorar configuracoes de rhosts (inseguro)
-ALLOW_RHOSTS="no"              # Permitir acesso via rhosts (yes/no)
-ALLOW_RHOSTS_RSA="no"          # Permitir acesso via rhosts com RSA (yes/no)
-MAX_AUTH_TRIES="3"             # Limite de tentativas de login sem sucesso (0 - desabilitado ou >= 1)
-ALLOW_TCP_FORWARD="no"         # Permitir Tcp Forwarding (Tunneling)
-ALLOW_X11_FORWARD="no"         # Permitir X11 Forwarding (exportar remotar aplicacacoes graficas)
-ALLOW_KEEPALIVE="yes"          # Permitir uso de keepalive para manter sessoes abertas
-GRACE_TIME="30"                # Tempo durante o login para inserir as credenciais
-USE_DNS="no"                   # Usar resolucao DNS para conexoes (yes/no)
-GSSAPI_AUTH="no"               # Permitir autenticacao GSSAPI? (yes/no)
-KERBEROS_AUTH="no"             # Permitir autenticacao Kerberos? (yes/no)
-PUBKEY_AUTH="no"               # Permitir autenticacao via Pubkey? (yes/no)
-RSA_AUTH="no"                  # Permitir autenticacao via RSA ? (yes/no)
-CHALLENGE_PAM="no"             # Utilizar challenge-response passwords do PAM? (yes/no)
-SERVERKEY_BITS="2048"          # Bits nas chaves geradas pelo SSH Server
-
-# ---------------------------------------
-# Servicos NAO permitidos
-# ---------------------------------------
-ALLOWSVS="abrt-ccpp
-abrt-oops
-abrtd
-acpid
-anacron
-apmd
-atd
-avahi-daemon
-bluetooth
-cups
-dkms_autoinstaller
-firstboot
-gpm
-hidd
-hplip
-isdn
-kdump
-kudzu
-messagebus
-microcode_ctl
-netconsole
-prelink
-postfix
-psacct
-pcscd
-qpidd
-rdisc
-readahead_early
-readahead_later
-rpcbind
-rpcgssd
-rpcidmapd
-saslauthd
-smart"
-
-# ---------------------------------------
-# SUIDs *NAO* permitidos
-# ---------------------------------------
-DENYSIDS="/bin/mount
-/bin/umount
-/sbin/netreport
-/usr/bin/at
-/usr/bin/chage
-/usr/bin/chfn
-/usr/bin/chsh
-/usr/bin/gpasswd
-/usr/bin/locate
-/usr/bin/newgrp
-/usr/bin/ssh-agent
-/usr/bin/wall
-/usr/bin/write
-/usr/libexec/openssh/ssh-keysign
-/usr/libexec/utempter/utempter
-/usr/sbin/sendmail.postfix
-/usr/sbin/usernetctl"
-
-# ---------------------------------------
-# Usuarios padroes do sistema
-# ---------------------------------------
-SYSTEMUSERS="bin
-daemon
-adm
-lp
-sync
-shutdown
-halt
-mail
-uucp
-operator
-games
-gopher
-ftp
-nobody
-vcsa
-saslauth
-postfix
-sshd"
-
-# ---------------------------------------
-# Filesystem must disable
-# ---------------------------------------
-FS_DISABLED="cramfs
-freevxfs
-jffs2
-hfs
-hfsplus
-squashfs
-udf"
+HEAD=`which head`
+APTGET=`which apt-get`
+YUM=`which yum`
+RPM=`which rpm`
+DPKG=`which dpkg`
 
 # ---------------------------------------
 # Colors
@@ -177,21 +39,160 @@ CYAN="\033[036m"
 WHITE="\033[037m"
 UNCOLOR="\033[0m"
 
-# ---------------------------------------
-# Functions
-# ---------------------------------------
+export PATH="${PATH:+$PATH:}/sbin:/usr/sbin:/bin:/usr/bin"
+
 chk_rootuser() {
 if [[ $UID -ne 0 ]]; then
-     echo "$0 must be run as root"
+     $ECHO "$0 must be run as root"
      exit 1
 fi
 }
 
-chk_remoteroot() {
-# TESTADO
-# Remover login remoto como super-usuario
-$TOUCH /etc/securetty
-cat <<EOF > /etc/securetty
+check_release(){
+OSTYPE=('CentOS' 'Debian' 'Ubuntu' 'Oracle')
+
+for OSTYPE in $($CAT /etc/*-release | $GREP ^NAME | $CUT -d '"' -f 2 | $AWK '{print $1}')
+do
+
+if [[ "$OSTYPE" == "CentOS" ]]; then
+        i=1
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Debian" ]]; then
+        i=2
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1 | $AWK -F'=' {' print $2 '}`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Ubuntu" ]]; then
+        i=3
+        OSVERSION=`$CAT /etc/*-release | $HEAD -4 | tail -1 | $AWK -F'=' {' print $2 '}`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Oracle" ]]; then
+        i=4
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1`
+        $ECHO $OSVERSION
+else	
+		$ECHO $OSVERSION
+		$ECHO $Erro
+
+fi
+
+done
+
+}
+
+banner() {
+clear
+${ECHO} ""
+${ECHO} "----------------------------------------------"
+${ECHO} "Aplicação de Hardening Linux"
+${ECHO} "Sistema Operacional Homologado:"
+${ECHO} "Centos 7, Centos 8 Stream, Oracle Linux 8, Ubuntu 20.04, Debian 11"
+${ECHO} -e $Erro
+${ECHO} "----------------------------------------------"
+${ECHO} ""
+${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}"
+
+GETIP=$(ip a | grep "inet" | $GREP -v 127.0.0.1 | $TAIL -2 | $HEAD -1 | $AWK -F' ' {' print $2 '})
+cmd=$(for i in ${GETIP}; do ${ECHO} ${MN} "${i} ";done)
+${ECHO} ${MC} "${YELLOW}OS Version:${UNCOLOR} $OSVERSION"
+${ECHO} ${MC} "${YELLOW}Hostname:${UNCOLOR} `hostname`"
+${ECHO} ${MC} "${YELLOW}IP(s):${UNCOLOR} ${cmd}"
+${ECHO} ""
+${ECHO} ""
+}
+
+verify_logrotate(){
+if [[ $i == 2 ]] || [[ $i == 3 ]];
+then
+	if $DPKG -l | $GREP logrotate > /dev/null;
+	then
+		${ECHO} "O pacote logrotate ja esta instalado"
+	else
+		${ECHO} "O pacote do logrotate será instalado"
+		$APTGET install logrotate
+	fi 
+elif [[ $i == 1 ]] || [[ $i == 4 ]];
+then
+	if $RPM -qa | $GREP logrotate > /dev/null;
+	then
+		${ECHO} "O pacote logrotate ja esta instalado"
+	else
+		${ECHO} "O pacote do logrotate será instalado"
+		$YUM install logrotate
+	fi
+fi
+}
+
+verify_rsyslog(){
+if [[ $i == 2 ]] || [[ $i == 3 ]];
+then
+	if $DPKG -l | $GREP rsyslog > /dev/null;
+	then
+		${ECHO} "O pacote rsyslog ja esta instalado"
+	else
+		${ECHO} "O pacote do rsyslog será instalado"
+		$APTGET install rsyslog
+	fi 
+elif [[ $i == 1 ]] || [[ $i == 4 ]];
+then
+	if $RPM -qa | $GREP rsyslog > /dev/null;
+	then
+		${ECHO} "O pacote rsyslog ja esta instalado"
+	else
+		${ECHO} "O pacote do rsyslog será instalado"
+		$YUM install rsyslog
+	fi
+fi
+}
+
+pam_security() {
+if [[ $i == 2 ]] || [[ $i == 3 ]]
+then
+  $ECHO "password    requisite     pam_cracklib.so try_first_pass retry=3 type=difok=3 minlen=8 dcredit=1 lcredit=1 ucredit=1 ocredit=1" >> /etc/pam.d/common-password
+  $ECHO "password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=4" >> /etc/pam.d/common-password
+  $ECHO "auth         required        pam_wheel.so wheel" >> /etc/pam.d/su
+elif [[ $i == 1 ]] || [[ $i == 4 ]]
+then
+  $ECHO "password    requisite     pam_cracklib.so try_first_pass retry=3 type=difok=3 minlen=8 dcredit=1 lcredit=1 ucredit=1 ocredit=1" >> /etc/pam.d/system-auth
+  $ECHO "password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=4" >> /etc/pam.d/system-auth
+  $ECHO "auth         required        pam_wheel.so wheel" >> /etc/pam.d/su
+fi
+}
+
+systemlogs_perm() {
+$ECHO "Ajuste das permissões de logs"
+$FIND /var/log/ -type f -exec $CHMOD 600 {} \;
+
+$CHMOD +t /var/tmp
+$CHMOD +t /tmp
+
+$ECHO "Ajuste das permissões do arquivo wtmp"
+if ls /var/log/ | $GREP wtmp > /dev/null
+then 
+	$ECHO "o arquivo wtmp ja existe"
+	$CHMOD 640 /var/log/wtmp
+else
+	$TOUCH /var/log/wtmp
+	$CHMOD 640 /var/log/wtmp
+fi
+}
+
+home_perm() {
+$ECHO "Ajuste das permissões do home"
+$FIND /home/ -type d -exec $CHMOD 700 {} \;
+
+$CHMOD 755 /home
+}
+
+change_remoteroot(){
+$ECHO "Validando o arquivo securetty"
+if ls /etc/ | $GREP securetty > /dev/null
+then
+	$ECHO "o arquivo ja existe securetty"
+else
+	$TOUCH /etc/securetty
+	$CHMOD 640 /etc/securetty
+	$CAT <<EOF > /etc/securetty
 console
 tty1
 tty2
@@ -202,484 +203,334 @@ tty6
 tty7
 tty8
 EOF
-${ECHO} ${MN} "Checking (Remover login remoto como super-usuario) "
-cmd=$(${GREP} -e "^vc" -e "^console" /etc/securetty)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_systemlogs_perm() {
-# TESTADO
-# Restringindo acesso de visualizacao por outros nos logs do sistema
-${ECHO} "Checking (Restringindo acesso de visualizacao por outros nos logs do sistema): "
-if [ -f /var/log/bash.log ] && [ $(stat -c '%a' /var/log/bash.log) -eq 600 ]; then
-        ${ECHO} ${MC} " - /var/log/bash.log ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/bash.log ]; then
-        ${ECHO} ${MC} " - /var/log/bash.log ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/bash.log ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-if [ -f /var/log/messages ] && [ $(stat -c '%a' /var/log/messages) -eq 600 ]; then
-        ${ECHO} ${MC} " - /var/log/messages ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/messages ]; then
-        ${ECHO} ${MC} " - /var/log/messages ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/messages ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-if [ -f /var/log/syslog ] && [ $(stat -c '%a' /var/log/syslog) -eq 600 ]; then
-        ${ECHO} ${MC} " - /var/log/syslog ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/syslog ]; then
-        ${ECHO} ${MC} " - /var/log/syslog ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/syslog ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-if [ -f /var/log/secure ] && [ $(stat -c '%a' /var/log/secure) -eq 600 ]; then
-        ${ECHO} ${MC} " - /var/log/secure ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/secure ]; then
-        ${ECHO} ${MC} " - /var/log/secure ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/secure ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-if [ -f /var/log/dmesg ] && [ $(stat -c '%a' /var/log/dmesg) -eq 600 ]; then
-        ${ECHO} ${MC} " - /var/log/dmesg ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/dmesg ]; then
-        ${ECHO} ${MC} " - /var/log/dmesg ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/dmesg ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-if [ -f /var/log/cron ] && [ $(stat -c '%a' /var/log/cron) -eq 600 ]; then
-        ${ECHO} ${MC} " - /var/log/cron ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/cron ]; then
-        ${ECHO} ${MC} " - /var/log/cron ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/cron ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-if [ -f /var/log/audit/audit.log ] && [ $(stat -c '%a' /var/log/audit/audit.log) -eq 600 ]; then
-        ${ECHO} ${MC} " - /var/log/audit/audit.log ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/audit/audit.log ]; then
-        ${ECHO} ${MC} " - /var/log/audit/audit.log ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/audit/audit.log ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-if [ -f /var/log/wtmp ] && [ $(stat -c '%a' /var/log/wtmp) -eq 640 ]; then
-        ${ECHO} ${MC} " - /var/log/wtmp ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/wtmp ]; then
-        ${ECHO} ${MC} " - /var/log/wtmp ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/wtmp ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-if [ -f /var/log/btmp ] && [ $(stat -c '%a' /var/log/btmp) -eq 600 ]; then
-        ${ECHO} ${MC} " - /var/log/btmp ${GREEN}[OK]${UNCOLOR}"
-else
-     if [ -f /var/log/btmp ]; then
-        ${ECHO} ${MC} " - /var/log/btmp ${RED}[FAIL]${UNCOLOR}"
-          COUNTER=$(($COUNTER+1))
-     else
-          ${ECHO} ${MC} " - /var/log/btmp ${GREEN}[OK]${UNCOLOR}"
-     fi
-fi
-
-}
-
-chk_logrotate() {
-# TESTADO
-# Configurar logrotate para criar arquivos de auditagem por permissao restritiva
-${ECHO} "Checking (Configurar logrotate para criar arquivos de auditagem por permissao restritiva) "
-cmd=$(${GREP} -e "^create 0600" /etc/logrotate.conf)
-[ $? = 0 ] && ${ECHO} ${MC} " - [logrotate.conf] create 0600 entry ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [logrotate.conf] create 0600 entry ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${GREP} -m 1 utmp /etc/logrotate.conf | ${GREP} "create 0640")
-[ $? = 0 ] && ${ECHO} ${MC} " - [logrotate.conf] utmp permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [logrotate.conf] utmp permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_umask() {
-# TESTADO
-# Definir umask padrao restritivo
-${ECHO} ${MN} "Checking (Definir umask padrao restritivo)  "
-cmd=$(${GREP} -e "umask 077" /etc/bashrc)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_authpasswd() {
-# TESTADO
-## Politica de Senhas
-# Configurar numero minimo de caracteres em senha
-# Configurar tempo maximo que a senha pode ser utilizada
-# Configurar tempo minimo entre mudanca de senhas
-# Configurar tempo de alerta para o usuario que esta proximo da expiracao de senha
-# Habilitar verificacao da trivialidade da senha
-# Definir tamanho de historico de senhas
-${ECHO} "Checking (Politica de Senhas): "
-cmd=$(${EGREP} "PASS_MIN_LEN.*${PASS_MIN_LEN}" /etc/login.defs)
-[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-#cmd=$(${EGREP} "PASS_MIN_DAYS.*${PASS_MIN_DAYS}" /etc/login.defs)
-#[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "difok=${DIFOK}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] difok ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] difok ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "minlen=${PASS_MIN_LEN}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] minlen ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] minlen ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "dcredit=${DCREDIT}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] dcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] dcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "lcredit=${LCREDIT}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] lcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] lcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "ucredit=${UCREDIT}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ucredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ucredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "ocredit=${OCREDIT}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ocredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ocredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "remember=${REMEMBER}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] remember ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] remember ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_crontab() {
-# Restringir o uso do crontab
-${ECHO} "Checking (Restringir o uso do crontab) "
-[ `stat -c '%a' /etc/crontab` -eq 600 ] && ${ECHO} ${MC} " - /etc/crontab permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${GETFACL} -p /etc/crontab | ${GREP} -e "owner: root")
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/crontab owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${GREP} root /etc/cron.allow)
-[ $? = 0 ] && ${ECHO} ${MC} " - root listed on /etc/cron.allow ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - root listed on /etc/cron.allow ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_timeout() {
-# Habilitar timeout para sessoes idle
-${ECHO} ${MN} "Checking (Habilitar timeout para sessoes idle)  "
-cmd=$(${EGREP} "^export TMOUT" /etc/profile)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_etcservices() {
-# Protegendo o arquivo services no etc
-${ECHO} ${MN} "Checking (Protegendo o arquivo services no etc)  "
-cmd=$(${LSATTR} /etc/services | grep --color "\-i\-")
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_unservices() {
-# Desativando servicos desnecessarios
-${ECHO} "Checking (Desativando servicos desnecessarios)  "
-for i in $ALLOWSVS; do 
-     cmd=$(chkconfig --list| grep ":on" | grep $i)
-     [ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-done
-}
-
-chk_filesystems() {
-# Desativando uso de filesystems incomuns
-${ECHO} ${MN} "Checking (Desativando uso de filesystems incomuns)  "
-[ -e /etc/modprobe.d/secadm.conf ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_passwd() {
-## Arquivos de usuario, grupo e senhas
-# Protegendo arquivos e diretorios importantes
-${ECHO} "Checking (Protegendo arquivos e diretorios importantes)  "
-cmd=$(${GETFACL} -p /etc/shadow | ${GREP} -e "owner: root")
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${GETFACL} -p /etc/gshadow | ${GREP} -e "owner: root")
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-[ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-[ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-
-# Bloquear senhas dos usuarios de sistema - BUG
-${ECHO} ${MN} "Checking (Bloquear senhas dos usuarios de sistema)  "
-cmd=$(${GREP} bash /etc/passwd| ${GREP} -v root | ${GREP} -v "uh-"| ${GREP} -v dcadmin)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_suids() {
-# Remover SUID de arquivos desnecessarios
-${ECHO} "Checking (Remover SUID de arquivos desnecessarios)  "
-for i in $DENYSIDS; do 
-     if [ -f ${i} ]; then
-          cmd=$(stat -c '%a' ${i})
-          [ ${cmd} -eq 4755 ] && ${ECHO} ${MC} " - ${i} permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1)) || ${ECHO} ${MC} " - ${i} permission ${GREEN}[OK]${UNCOLOR}"
-     else
-          continue
-     fi
-done
-}
-
-chk_su() {
-# Limitar uso do comando su
-${ECHO} ${MN} "Checking (Limitar uso do comando su)  "
-cmd=$(${EGREP} "^auth.*pam_wheel.so.*use_uid" /etc/pam.d/su)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_homeusers() {
-# Certifique que diretorios home de usuarios nao sao Group-Writable e World-Readable
-${ECHO} "Checking (Certifique que diretorios home de usuarios nao sao Group-Writable e World-Readable)  "
-HOMELIST=$(find /home/ -mindepth 1 -maxdepth 1 -type d)
-for i in $HOMELIST; do
-[ `stat -c '%a' ${i}` -eq 700 ] && ${ECHO} ${MC} " - ${i} permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - ${i} permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-done
-}
-
-chk_netrc() {
-# Certifique que usuarios nao tem arquivos .netrc
-${ECHO} ${MN} "Checking (Certifique que usuarios nao tem arquivos .netrc)  "
-cmd=$(find $HOMEDIR -name ".netrc")
-if [ -e $cmd ]; then
-     ${ECHO} ""
-     for i in $cmd; do
-          ${ECHO} ${MC} " - ${i} found ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-     done
-else
-     ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}"
 fi
 }
 
-chk_coredumps() {
-# Desabilitando core dumps
-${ECHO} "Checking (Desabilitando core dumps)  "
-cmd=$(${EGREP} "^*.*hard.*core" /etc/security/limits.conf)
-[ $? = 0 ] && ${ECHO} ${MC} " - [limits.conf] hard core ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [limits.conf] hard core ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${GREP} "fs.suid_dumpable = 0" /etc/sysctl.conf)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sysctl.conf] fs.suid_dumpable ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sysctl.conf] fs.suid_dumpable ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
-
-chk_syslogsrv() {
-# Defina um syslog server
-${ECHO} ${MN} "Checking (Defina um syslog server)  "
-if [ -f ${SYSLOGFILE} ]; then
-     cmd=$(${GREP} -e "^*.*" ${SYSLOGFILE} | ${GREP} ":514")
-     [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+ch_crond() {
+$ECHO "Validando o arquivo cron.allow"
+if ls /etc/ | $GREP cron.allow  > /dev/null
+then
+	$ECHO "o arquivo cron.allow ja existe"
+	$ECHO "root" >> cron.allow
 else
-     ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"
-     ${ECHO} ${MC} "${YELLOW}Syslog configuration file not found, please set SYSLOGFILE setting on LVS Script${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	$TOUCH /etc/cron.allow
+	$CHMOD 600 /etc/cron.allow
+	$CAT <<EOF > /etc/cron.allow
+root
+EOF
+fi
+
+$ECHO "Validando o arquivo cron.deny"
+if ls /etc/ | $GREP cron.deny  > /dev/null
+then
+	$ECHO "o arquivo cron.deny ja existe"
+	$CAT <<EOF > /etc/cron.deny
+bin
+daemon
+adm
+lp
+mail
+uucp
+operator
+games
+gopher
+ftp
+nobody
+dbus
+vcsa
+nscd
+rpc
+abrt
+saslauth
+postfix
+qpidd
+haldaemon
+ntp
+arpwatch
+sshd
+nslcd
+tcpdump
+EOF
+else
+	$TOUCH /etc/cron.deny
+	$CHMOD 600 /etc/cron.deny
+	$CAT <<EOF > /etc/cron.deny
+bin
+daemon
+adm
+lp
+mail
+uucp
+operator
+games
+gopher
+ftp
+nobody
+dbus
+vcsa
+nscd
+rpc
+abrt
+saslauth
+postfix
+qpidd
+haldaemon
+ntp
+arpwatch
+sshd
+nslcd
+tcpdump
+EOF
 fi
 }
 
-chk_syslogd() {
-# Restricting access by other users viewer the syslog
-${ECHO} "Checking (Restringindo acesso de visualizacao por outros nos logs do sistema)  "
-if [ -f ${SYSLOGFILE} ] && [ ${SYSLOGFILE} = "/etc/rsyslog.conf" ]; then
-     SYSLOGS=`${GREP} -e '/var/log' ${SYSLOGFILE} | ${GREP} -v "programname"^ | awk -F" " {' print $2 '} | sed 's/^\-//g'`
-     for SYSLOG in ${SYSLOGS}; do
-          [ `stat -c '%a' ${i}` -eq 600 ] && ${ECHO} ${MC} " - logfile ${i} permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - logfile ${i} permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-     done
+add_group_wheel() {
+$ECHO "Validando o grupo wheel"
+if $CAT /etc/group | $GREP wheel > /dev/null
+then
+	$ECHO "o grupo wheel ja existe"
+	$USERMOD -a -G wheel root
 else
-     ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-     ${ECHO} ${MC} "${YELLOW}Syslog configuration file not found, please set SYSLOGFILE setting on LVS Script${UNCOLOR}"
+	groupadd wheel
+	$ECHO "grupo wheel criado"
+	$USERMOD -a -G wheel root
 fi
 }
 
-chk_motd() {
-# Tested on CentOS 6.2 x64
-# Defina um MOTD para alerta
-${ECHO} "Checking (Remover motd/issue padrao)  "
-$TOUCH /etc/motd
-cat <<EOF > /etc/motd
+change_banner() {
+$ECHO "Validando /etc/motd"
+if ls /etc | $GREP motd > /dev/null
+then 
+	$ECHO "o arquivo motd ja existe"
+	$CAT <<EOF > /etc/motd
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
-
 E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
 devidamente controlado, monitorado e de responsabilidade do Universo Online S/A.
-
 Se voce nao possui autorizacao para acessar este recurso, desconecte
 imediatamente ou podera sofrer sancoes legais e/ou acao disciplinar.
-
 Em caso de problemas envie email para l-monitor-sec@uolinc.com
 --------------------------------------------------------------------------------
 EOF
-$TOUCH /etc/issue.net
-cat <<EOF > /etc/issue.net
+else
+	$TOUCH /etc/motd
+	$CHMOD 640 /etc/motd
+	$CAT <<EOF > /etc/motd
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
-
 E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
 devidamente controlado, monitorado e de responsabilidade do Universo Online S/A.
-
 Se voce nao possui autorizacao para acessar este recurso, desconecte
 imediatamente ou podera sofrer sancoes legais e/ou acao disciplinar.
-
 Em caso de problemas envie email para l-monitor-sec@uolinc.com
 --------------------------------------------------------------------------------
 EOF
-cmd=$(${EGREP} ".*ATENCAO: Aviso Importante" /etc/motd)
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/motd content ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/motd content ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-#cmd=$(${EGREP} ".*ATENCAO: Aviso Importante" /etc/issue)
-#[ $? = 0 ] && ${ECHO} ${MC} " - /etc/issue content ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/issue content${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} ".*ATENCAO: Aviso Importante" /etc/issue.net)
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/issue.net content${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/issue.net content${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+fi
+
+$ECHO "Validando issue.net"
+if ls /etc | $GREP issue.net > /dev/null
+then 
+	$ECHO "o arquivo motd ja existe"
+	$CAT <<EOF > /etc/issue.net
+--------------------------------------------------------------------------------
+                        ATENCAO: Aviso Importante
+E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
+devidamente controlado, monitorado e de responsabilidade do Universo Online S/A.
+Se voce nao possui autorizacao para acessar este recurso, desconecte
+imediatamente ou podera sofrer sancoes legais e/ou acao disciplinar.
+Em caso de problemas envie email para l-monitor-sec@uolinc.com
+--------------------------------------------------------------------------------
+EOF
+else
+	$TOUCH /etc/issue.net
+	$CHMOD 640 /etc/issue.net
+	$CAT <<EOF > /etc/issue.net
+--------------------------------------------------------------------------------
+                        ATENCAO: Aviso Importante
+E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
+devidamente controlado, monitorado e de responsabilidade do Universo Online S/A.
+Se voce nao possui autorizacao para acessar este recurso, desconecte
+imediatamente ou podera sofrer sancoes legais e/ou acao disciplinar.
+Em caso de problemas envie email para l-monitor-sec@uolinc.com
+--------------------------------------------------------------------------------
+EOF
+fi
 }
 
-improve_pass_hash_algorithm() {
-${ECHO} ${MN} "Checking (Elevando algoritmo hash de senhas)  "
-cmd=$(${EGREP} "PASSWDALGORITHM=sha512" /etc/sysconfig/authconfig)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+change_login_defs() {
+UMASK=`$CAT /etc/login.defs | $GREP UMASK | $TAIL -1 | $AWK '{ print $2 }'`
+if [ $UMASK -eq 077 ]; then
+        $ECHO "O valor do umask ja esta alterado"
+else
+        $ECHO "Alterando o valor do umask para o recomendado"
+        $ECHO "$($SED 's/022/077/' /etc/login.defs)" > /etc/login.defs
+        umask 077
+fi
+
+$ECHO "Ajustando a validação de senhas:"
+$SED -i -- 's/PASS_MIN_LEN/#PASS_MIN_LEN/g' /etc/login.defs
+$SED -i -- 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs
+$SED -i -- 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs
+$SED -i -- 's/PASS_WARN_AGE/#PASS_WARN_AGE/g' /etc/login.defs
+
+$ECHO "PASS_MIN_LEN 8" >> /etc/login.defs
+$ECHO "PASS_MAX_DAYS 90" >> /etc/login.defs
+$ECHO "PASS_MIN_DAYS 3" >> /etc/login.defs
+$ECHO "PASS_WARN_AGE 7" >> /etc/login.defs
+}
+
+change_tmout() {
+$ECHO "readonly TMOUT=7200" >> /etc/profile
+$ECHO "export TMOUT=7200" >> /etc/profile
+}
+
+remove_nologin() {
+$ECHO "Removendo permissão de login"
+$USERMOD --shell /sbin/nologin bin
+$USERMOD --shell /sbin/nologin daemon
+$USERMOD --shell /sbin/nologin adm
+$USERMOD --shell /sbin/nologin lp
+$USERMOD --shell /sbin/nologin sync
+$USERMOD --shell /sbin/nologin shutdown
+$USERMOD --shell /sbin/nologin halt
+$USERMOD --shell /sbin/nologin mail
+$USERMOD --shell /sbin/nologin uucp
+$USERMOD --shell /sbin/nologin operator
+$USERMOD --shell /sbin/nologin games
+$USERMOD --shell /sbin/nologin gopher
+$USERMOD --shell /sbin/nologin ftp
+$USERMOD --shell /sbin/nologin nobody
+$USERMOD --shell /sbin/nologin vcsa
+$USERMOD --shell /sbin/nologin saslauth
+$USERMOD --shell /sbin/nologin postfix
+$USERMOD --shell /sbin/nologin sshd
+}
+
+change_perm_passwd() {
+$ECHO "Ajustando permissões de arquivos de senhas"
+$CHOWN root:root /etc/passwd
+$CHOWN root:root /etc/shadow
+$CHOWN root:root /etc/group
+$CHOWN root:root /etc/gshadow
+$CHMOD 644 /etc/passwd
+$CHMOD 644 /etc/group
+$CHMOD 400 /etc/shadow
+$CHMOD 400 /etc/gshadow
+$CHMOD 600 /etc/logrotate.conf
+}
+
+change_perm_crontab() {
+$ECHO "Ajustando permissões do crontab e cron"
+$CHOWN root:root /etc/crontab
+$CHMOD 600 /etc/crontab
+
+$CHOWN -R root:root /etc/cron.hourly
+$CHOWN -R root:root /etc/cron.daily
+$CHOWN -R root:root /etc/cron.weekly
+$CHOWN -R root:root /etc/cron.monthly
+$CHOWN -R root:root /etc/cron.d
+$CHMOD -R go-rwx /etc/cron.hourly
+$CHMOD -R go-rwx /etc/cron.daily
+$CHMOD -R go-rwx /etc/cron.weekly
+$CHMOD -R go-rwx /etc/cron.monthly
+$CHMOD -R go-rwx /etc/cron.d
+}
+
+chnage_suids()  {
+$ECHO "Ajustando SUID dos binarios"
+$CHMOD g-s /bin/mount
+$CHMOD g-s /bin/umount
+$CHMOD g-s /sbin/netreport
+$CHMOD g-s /usr/bin/at
+$CHMOD g-s /usr/bin/chage
+$CHMOD g-s /usr/bin/chfn
+$CHMOD g-s /usr/bin/chsh
+$CHMOD g-s /usr/bin/gpasswd
+$CHMOD g-s /usr/bin/locate
+$CHMOD g-s /usr/bin/newgrp
+$CHMOD g-s /usr/bin/ssh-agent
+$CHMOD g-s /usr/bin/wall
+$CHMOD g-s /usr/bin/write
 }
 
 ssh_security() {
-${ECHO} "Checking (SSH Security Settings)  "
-cmd=$(${EGREP} "PermitEmptyPasswords $ALLOW_EMPTY_PASS" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitEmptyPasswords ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitEmptyPasswords ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "PermitRootLogin $ALLOW_ROOT_LOGIN" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitRootLogin ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitRootLogin ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "IgnoreRhosts $IGNORE_RHOSTS" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] IgnoreRhosts ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] IgnoreRhosts ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "RhostsRSAAuthentication $ALLOW_RHOSTS_RSA" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] RhostsRSAAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] RhostsRSAAuthentication ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "Protocol 2" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] Protocol ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] Protocol ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "UsePrivilegeSeparation yes" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UsePrivilegeSeparation ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UsePrivilegeSeparation ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "StrictModes yes" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] StrictModes ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] StrictModes ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "MaxAuthTries $MAX_AUTH_TRIES" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] MaxAuthTries ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] MaxAuthTries ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "AllowTcpForwarding $ALLOW_TCP_FORWARD" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] AllowTcpForwarding ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] AllowTcpForwarding ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "X11Forwarding $ALLOW_X11_FORWARD" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] X11Forwarding ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] X11Forwarding ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "SyslogFacility AUTHPRIV" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] SyslogFacility ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] SyslogFacility ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "LogLevel INFO" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] LogLevel ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] LogLevel ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "TCPKeepAlive $ALLOW_KEEPALIVE" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] TCPKeepAlive ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] TCPKeepAlive ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "PermitUserEnvironment no" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitUserEnvironment ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitUserEnvironment ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "LoginGraceTime $GRACE_TIME" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] LoginGraceTime ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] LoginGraceTime ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-#cmd=$(${EGREP} "KeyRegenerationInterval 1800" /etc/ssh/sshd_config)
-#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] KeyRegenerationInterval ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] KeyRegenerationInterval ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "UseDNS $USE_DNS" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UseDNS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UseDNS ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-#cmd=$(${EGREP} "ServerKeyBits $SERVERKEY_BITS" /etc/ssh/sshd_config)
-#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] ServerKeyBits ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] ServerKeyBits ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "RSAAuthentication $RSA_AUTH" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] RSAAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] RSAAuthentication ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-#cmd=$(${EGREP} "PubkeyAuthentication $PUBKEY_AUTH" /etc/ssh/sshd_config)
-#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PubkeyAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PubkeyAuthentication ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "ChallengeResponseAuthentication $CHALLENGE_PAM" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] ChallengeResponseAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] ChallengeResponseAuthentication ${RED}[FAIL]${UNCOLOR} "; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "KerberosAuthentication $KERBEROS_AUTH" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] KerberosAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] KerberosAuthentication ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "GSSAPIAuthentication $GSSAPI_AUTH" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] GSSAPIAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] GSSAPIAuthentication ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "PrintLastLog yes" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PrintLastLog ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PrintLastLog ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "UsePAM yes" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UsePAM ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UsePAM ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+$ECHO "Ajustando os parametros do SSHD:"
+$SED -i -- 's/PermitEmptyPasswords/#PermitEmptyPasswords/g' /etc/ssh/sshd_config
+$SED -i -- 's/PermitRootLogin/#PermitRootLogin/g' /etc/ssh/sshd_config
+$SED -i -- 's/IgnoreRhosts/#IgnoreRhosts/g' /etc/ssh/sshd_config
+$SED -i -- 's/LoginGraceTime/#LoginGraceTime/g' /etc/ssh/sshd_config
+$SED -i -- 's/MaxAuthTries/#MaxAuthTries/g' /etc/ssh/sshd_config
+$SED -i -- 's/StrictModes/#StrictModes/g' /etc/ssh/sshd_config
+$SED -i -- 's/AllowTcpForwarding/#AllowTcpForwarding/g' /etc/ssh/sshd_config
+$SED -i -- 's/X11Forwarding/#X11Forwarding/g' /etc/ssh/sshd_config
+$SED -i -- 's/TCPKeepAlive/#TCPKeepAlive/g' /etc/ssh/sshd_config
+$SED -i -- 's/LoginGraceTime/#LoginGraceTime/g' /etc/ssh/sshd_config
+$SED -i -- 's/U$SEDNS/#U$SEDNS/g' /etc/ssh/sshd_config
+$SED -i -- 's/GSSAPIAuthenti$CATion/#GSSAPIAuthenti$CATion/g' /etc/ssh/sshd_config
+$SED -i -- 's/KerberosAuthenti$CATion/#KerberosAuthenti$CATion/g' /etc/ssh/sshd_config
+$SED -i -- 's/PubkeyAuthenti$CATion/#PubkeyAuthenti$CATion/g' /etc/ssh/sshd_config
+$SED -i -- 's/PasswordAuthenti$CATion/#PasswordAuthenti$CATion/g' /etc/ssh/sshd_config
+$SED -i -- 's/ChallengeResponseAuthenti$CATion/#ChallengeResponseAuthenti$CATion/g' /etc/ssh/sshd_config
+$SED -i -- 's/MaxStartups/#MaxStartups/g' /etc/ssh/sshd_config
+
+$ECHO "PermitEmptyPasswords no" >> /etc/ssh/sshd_config
+$ECHO "PermitRootLogin no" >> /etc/ssh/sshd_config
+$ECHO "IgnoreRhosts yes" >> /etc/ssh/sshd_config
+$ECHO "LoginGraceTime 45" >> /etc/ssh/sshd_config
+$ECHO "MaxAuthTries 3" >> /etc/ssh/sshd_config
+$ECHO "StrictModes yes" >> /etc/ssh/sshd_config
+$ECHO "AllowTcpForwarding no" >> /etc/ssh/sshd_config
+$ECHO "X11Forwarding no" >> /etc/ssh/sshd_config
+$ECHO "TCPKeepAlive yes" >> /etc/ssh/sshd_config
+$ECHO "LoginGraceTime 30" >> /etc/ssh/sshd_config
+$ECHO "U$SEDNS no" >> /etc/ssh/sshd_config
+$ECHO "GSSAPIAuthenti$CATion no" >> /etc/ssh/sshd_config
+$ECHO "KerberosAuthenti$CATion no" >> /etc/ssh/sshd_config
+$ECHO "PubkeyAuthenti$CATion no" >> /etc/ssh/sshd_config
+$ECHO "PasswordAuthenti$CATion yes" >> /etc/ssh/sshd_config
+$ECHO "ChallengeResponseAuthenti$CATion no" >> /etc/ssh/sshd_config
+$ECHO "MaxStartups 3:50:6" >> /etc/ssh/sshd_config
 }
 
-chk_final() {
-if [ ${COUNTER} -gt 0 ]; then
-     ${ECHO} ${MC} ""
-     ${ECHO} ${MC} "#################################################"
-     ${ECHO} ${MC} "#  Checklist ${RED}[FAIL]${UNCOLOR} ${YELLOW} - ${COUNTER} items are missing${UNCOLOR}    #"
-     ${ECHO} ${MC} "#################################################"
-     ${ECHO} ${MC} ""
+kernel_security() {
+$ECHO "Validando o arquivo sysctl.conf"
+if ls /etc/ | $GREP sysctl.conf  > /dev/null
+then
+        $ECHO "o arquivo sysctl.conf ja existe"
+        $CAT <<EOF > /etc/sysctl.conf
+net.ipv4.ip_forward = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.icmp_$ECHO_ignore_broadcasts=1
+EOF
 else
-     ${ECHO} ${MC} ""
-     ${ECHO} ${MC} "#########################################"
-     ${ECHO} ${MC} "#  Congratulations! Checklist ${GREEN}[OK]${UNCOLOR}!     #"
-     ${ECHO} ${MC} "#########################################"
-     ${ECHO} ${MC} ""
+        $TOUCH /etc/sysctl.conf
+        $CHMOD 600 /etc/sysctl.conf
+        $CAT <<EOF > /etc/sysctl.conf
+net.ipv4.ip_forward = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.icmp_$ECHO_ignore_broadcasts=1
+EOF
 fi
 }
 
-check_release(){
-OSTYPE=('CentOS' 'Debian' 'Ubuntu' 'Oracle')
-
-for OSTYPE in $(cat /etc/*-release | grep ^NAME | cut -d '"' -f 2 | awk '{print $1}')
-do
-
-if [[ "$OSTYPE" == "CentOS" ]]; then
-        i=1
-        OSVERSION=`cat /etc/*-release | head -1`
-        ${ECHO} $OSVERSION
-elif [[ "$OSTYPE" == "Debian" ]]; then
-        i=1
-        OSVERSION=`cat /etc/*-release | head -1 | awk -F'=' {' print $2 '}`
-        ${ECHO} $OSVERSION
-elif [[ "$OSTYPE" == "Ubuntu" ]]; then
-        i=1
-        OSVERSION=`cat /etc/*-release | head -4 | tail -1 | awk -F'=' {' print $2 '}`
-        ${ECHO} $OSVERSION
-elif [[ "$OSTYPE" == "Oracle" ]]; then
-        i=1
-        OSVERSION=`cat /etc/*-release | head -1`
-        ${ECHO} $OSVERSION
-fi
-
-done
-
-if [ $i -eq 0 ]; then
-Erro="\033[33;1m[WARNING!]\033[m Script not tested with S.O. version"
-fi
-
-}
-
-
-banner() {
-clear
-${ECHO} ""
-${ECHO} "----------------------------------------------"
-${ECHO} "LVS - Linux Validate Script - Client Version"
-${ECHO} -e $Erro
-${ECHO} "----------------------------------------------"
-${ECHO} ""
-${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}"
-
-GETIP=$(ip a | grep "inet" | grep -v 127.0.0.1 | tail -2 | head -1 | awk -F' ' {' print $2 '})
-cmd=$(for i in ${GETIP}; do ${ECHO} ${MN} "${i} ";done)
-${ECHO} ${MC} "${YELLOW}OS Version:${UNCOLOR} $OSVERSION"
-${ECHO} ${MC} "${YELLOW}Hostname:${UNCOLOR} `hostname`"
-${ECHO} ${MC} "${YELLOW}IP(s):${UNCOLOR} ${cmd}"
-${ECHO} ""
-${ECHO} ""
-}
-
-# ---------------------------------------
-# Init
-# ---------------------------------------
 chk_rootuser
 check_release
 banner
-chk_remoteroot
-chk_systemlogs_perm
-chk_logrotate
-chk_umask
-chk_authpasswd
-chk_crontab
-chk_timeout
-chk_etcservices
-chk_unservices
-chk_filesystems
-chk_passwd
-chk_suids
-chk_su
-chk_homeusers
-chk_netrc
-chk_coredumps
-chk_syslogsrv
-#chk_syslogd
-chk_motd
+verify_logrotate
+verify_rsyslog
+pam_security
+change_remoteroot
+systemlogs_perm
+home_perm
+ch_crond
+add_group_wheel
+change_banner
+change_login_defs
+change_tmout
+remove_nologin
+change_perm_passwd
+change_perm_crontab
 ssh_security
-improve_pass_hash_algorithm
-chk_final
-rm -f $0
+kernel_security
