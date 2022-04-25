@@ -122,7 +122,12 @@ ${ECHO} "----------------------------------------------"
 ${ECHO} "Aplicacao de Hardening Linux"
 ${ECHO} "Sistema Operacional Homologado:"
 ${ECHO} "Centos 7, Centos 8 Stream, Oracle Linux 8, Ubuntu 20.04, Debian 11"
+if [[ $i == 1 ]] || [[ $i == 2 ]] || [[ $i == 3 ]] || [[ $i == 4 ]];
+then
+
+else 
 ${ECHO} -e $Erro
+fi
 ${ECHO} "----------------------------------------------"
 ${ECHO} ""
 ${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}"
