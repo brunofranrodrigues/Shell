@@ -37,6 +37,7 @@ APTGET=`which apt-get`
 YUM=`which yum`
 RPM=`which rpm`
 DPKG=`which dpkg`
+NOLOGIN=`which nologin`
 opc=0
 
 # ---------------------------------------
@@ -420,24 +421,24 @@ $ECHO "export TMOUT=7200" >> /etc/profile
 
 remove_nologin() {
 $ECHO "Removendo permissao de login"
-$USERMOD --shell /sbin/nologin bin
-$USERMOD --shell /sbin/nologin daemon
-$USERMOD --shell /sbin/nologin adm
-$USERMOD --shell /sbin/nologin lp
-$USERMOD --shell /sbin/nologin sync
-$USERMOD --shell /sbin/nologin shutdown
-$USERMOD --shell /sbin/nologin halt
-$USERMOD --shell /sbin/nologin mail
-$USERMOD --shell /sbin/nologin uucp
-$USERMOD --shell /sbin/nologin operator
-$USERMOD --shell /sbin/nologin games
-$USERMOD --shell /sbin/nologin gopher
-$USERMOD --shell /sbin/nologin ftp
-$USERMOD --shell /sbin/nologin nobody
-$USERMOD --shell /sbin/nologin vcsa
-$USERMOD --shell /sbin/nologin saslauth
-$USERMOD --shell /sbin/nologin postfix
-$USERMOD --shell /sbin/nologin sshd
+$USERMOD --shell $NOLOGIN bin
+$USERMOD --shell $NOLOGIN daemon
+$USERMOD --shell $NOLOGIN adm
+$USERMOD --shell $NOLOGIN lp
+$USERMOD --shell $NOLOGIN sync
+$USERMOD --shell $NOLOGIN shutdown
+$USERMOD --shell $NOLOGIN halt
+$USERMOD --shell $NOLOGIN mail
+$USERMOD --shell $NOLOGIN uucp
+$USERMOD --shell $NOLOGIN operator
+$USERMOD --shell $NOLOGIN games
+$USERMOD --shell $NOLOGIN gopher
+$USERMOD --shell $NOLOGIN ftp
+$USERMOD --shell $NOLOGIN nobody
+$USERMOD --shell $NOLOGIN vcsa
+$USERMOD --shell $NOLOGIN saslauth
+$USERMOD --shell $NOLOGIN postfix
+$USERMOD --shell $NOLOGIN sshd
 }
 
 change_perm_passwd() {
