@@ -142,7 +142,7 @@ then
 	then
 		${ECHO} "O pacote logrotate ja esta instalado"
 	else
-		${ECHO} "O pacote do logrotate serÃ¡ instalado"
+		${ECHO} "O pacote do logrotate sera instalado"
 		$APTGET install logrotate
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
@@ -151,7 +151,7 @@ then
 	then
 		${ECHO} "O pacote logrotate ja esta instalado"
 	else
-		${ECHO} "O pacote do logrotate serÃ¡ instalado"
+		${ECHO} "O pacote do logrotate sera instalado"
 		$YUM install logrotate
 	fi
 fi
@@ -164,7 +164,7 @@ then
 	then
 		${ECHO} "O pacote rsyslog ja esta instalado"
 	else
-		${ECHO} "O pacote do rsyslog serÃ¡ instalado"
+		${ECHO} "O pacote do rsyslog sera instalado"
 		$APTGET install rsyslog
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
@@ -173,7 +173,7 @@ then
 	then
 		${ECHO} "O pacote rsyslog ja esta instalado"
 	else
-		${ECHO} "O pacote do rsyslog serÃ¡ instalado"
+		${ECHO} "O pacote do rsyslog sera instalado"
 		$YUM install rsyslog
 	fi
 fi
@@ -194,13 +194,13 @@ fi
 }
 
 systemlogs_perm() {
-$ECHO "Ajuste das permissÃµes de logs"
+$ECHO "Ajuste das permissoes de logs"
 $FIND /var/log/ -type f -exec $CHMOD 600 {} \;
 
 $CHMOD +t /var/tmp
 $CHMOD +t /tmp
 
-$ECHO "Ajuste das permissÃµes do arquivo wtmp"
+$ECHO "Ajuste das permissoes do arquivo wtmp"
 if ls /var/log/ | $GREP wtmp > /dev/null
 then 
 	$ECHO "o arquivo wtmp ja existe"
@@ -212,7 +212,7 @@ fi
 }
 
 home_perm() {
-$ECHO "Ajuste das permissÃµes do home"
+$ECHO "Ajuste das permissoes do home"
 $FIND /home/ -type d -exec $CHMOD 700 {} \;
 
 $CHMOD 755 /home
@@ -222,7 +222,7 @@ change_remoteroot(){
 $ECHO "Validando o arquivo securetty"
 if ls /etc/ | $GREP securetty > /dev/null
 then
-	$ECHO "o arquivo ja existe securetty"
+	$ECHO "O arquivo securetty ja existe"
 else
 	$TOUCH /etc/securetty
 	$CHMOD 640 /etc/securetty
@@ -244,7 +244,7 @@ ch_crond() {
 $ECHO "Validando o arquivo cron.allow"
 if ls /etc/ | $GREP cron.allow  > /dev/null
 then
-	$ECHO "o arquivo cron.allow ja existe"
+	$ECHO "O arquivo cron.allow ja existe"
 	$ECHO "root" >> cron.allow
 else
 	$TOUCH /etc/cron.allow
@@ -257,7 +257,7 @@ fi
 $ECHO "Validando o arquivo cron.deny"
 if ls /etc/ | $GREP cron.deny  > /dev/null
 then
-	$ECHO "o arquivo cron.deny ja existe"
+	$ECHO "O arquivo cron.deny ja existe"
 	$CAT <<EOF > /etc/cron.deny
 bin
 daemon
@@ -322,7 +322,7 @@ add_group_wheel() {
 $ECHO "Validando o grupo wheel"
 if $CAT /etc/group | $GREP wheel > /dev/null
 then
-	$ECHO "o grupo wheel ja existe"
+	$ECHO "O grupo wheel ja existe"
 	$USERMOD -a -G wheel root
 else
 	groupadd wheel
@@ -335,7 +335,7 @@ change_banner() {
 $ECHO "Validando /etc/motd"
 if ls /etc | $GREP motd > /dev/null
 then 
-	$ECHO "o arquivo motd ja existe"
+	$ECHO "O arquivo motd ja existe"
 	$CAT <<EOF > /etc/motd
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
@@ -401,7 +401,7 @@ else
         umask 077
 fi
 
-$ECHO "Ajustando a validaÃ§Ã£o de senhas:"
+$ECHO "Ajustando a validacao de senhas:"
 $SED -i -- 's/PASS_MIN_LEN/#PASS_MIN_LEN/g' /etc/login.defs
 $SED -i -- 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs
 $SED -i -- 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs
@@ -419,7 +419,7 @@ $ECHO "export TMOUT=7200" >> /etc/profile
 }
 
 remove_nologin() {
-$ECHO "Removendo permissÃ£o de login"
+$ECHO "Removendo permissao de login"
 $USERMOD --shell /sbin/nologin bin
 $USERMOD --shell /sbin/nologin daemon
 $USERMOD --shell /sbin/nologin adm
@@ -441,7 +441,7 @@ $USERMOD --shell /sbin/nologin sshd
 }
 
 change_perm_passwd() {
-$ECHO "Ajustando permissÃµes de arquivos de senhas"
+$ECHO "Ajustando permissoes de arquivos de senhas"
 $CHOWN root:root /etc/passwd
 $CHOWN root:root /etc/shadow
 $CHOWN root:root /etc/group
@@ -454,7 +454,7 @@ $CHMOD 600 /etc/logrotate.conf
 }
 
 change_perm_crontab() {
-$ECHO "Ajustando permissÃµes do crontab e cron"
+$ECHO "Ajustando permissoes do crontab e cron"
 $CHOWN root:root /etc/crontab
 $CHMOD 600 /etc/crontab
 
