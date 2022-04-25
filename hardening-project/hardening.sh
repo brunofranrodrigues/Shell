@@ -118,7 +118,7 @@ banner() {
 clear
 ${ECHO} ""
 ${ECHO} "----------------------------------------------"
-${ECHO} "AplicaÃ§Ã£o de Hardening Linux"
+${ECHO} "Aplicacao de Hardening Linux"
 ${ECHO} "Sistema Operacional Homologado:"
 ${ECHO} "Centos 7, Centos 8 Stream, Oracle Linux 8, Ubuntu 20.04, Debian 11"
 ${ECHO} -e $Erro
