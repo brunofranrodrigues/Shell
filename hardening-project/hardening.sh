@@ -16,7 +16,7 @@
 # ---------------------------------------
 
 i="";
-Erro="Sistema nÃ£o homologado"
+Erro="Sistema não homologado"
 OSVERSION=""
 MN="-n"
 MC="-e"
