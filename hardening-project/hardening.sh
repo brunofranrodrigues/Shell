@@ -1,11 +1,22 @@
 #!/bin/bash
+##############################################################################
+# v0.1                                                                       #
+# ============================================                               #
+#                                                                            #
+# Copyright (c) 2022 by Bruno Rodrigues - brunofranrodrigues@gmail.com       #
+# Last Updated 24/04/2022                                                    #
+#                                                                            #
+# This program is free software. You can redistribute it and/or modify       #
+# it under the terms of the GNU General Public License as published by       #
+# the Free Software Foundation; either version 2 of the License.             #
+##############################################################################
 
 # ---------------------------------------
 # Environment variables
 # ---------------------------------------
 
 i="";
-Erro="Sistema não homologado"
+Erro="Sistema nÃ£o homologado"
 OSVERSION=""
 MN="-n"
 MC="-e"
@@ -17,6 +28,7 @@ AWK=`which awk`
 ECHO=`which echo`
 FIND=`which find`
 GREP=`which grep`
+CUT=`which cut`
 TOUCH=`which touch`
 SED=`which sed`
 TAIL=`which tail`
@@ -25,6 +37,7 @@ APTGET=`which apt-get`
 YUM=`which yum`
 RPM=`which rpm`
 DPKG=`which dpkg`
+opc=0
 
 # ---------------------------------------
 # Colors
@@ -40,6 +53,29 @@ WHITE="\033[037m"
 UNCOLOR="\033[0m"
 
 export PATH="${PATH:+$PATH:}/sbin:/usr/sbin:/bin:/usr/bin"
+
+
+
+while	[ "$opc" -lt 1 -o $opc -gt 2 ]
+do
+	clear
+	echo -e "
+	+---------------------------------------------------+
+	|						    |
+	|                  Hardening script		    |
+	|						    |
+	+---------------------------------------------------+
+		OPCAO	ACAO		
+		-----	----
+		  1	Aplicar hardening
+                  2     Sair
+		Entre com a opcao desejada: \c"
+	read opc
+done
+if [ $opc -eq 2 ]
+then
+   exit
+fi
 
 chk_rootuser() {
 if [[ $UID -ne 0 ]]; then
@@ -64,18 +100,15 @@ elif [[ "$OSTYPE" == "Debian" ]]; then
         $ECHO $OSVERSION
 elif [[ "$OSTYPE" == "Ubuntu" ]]; then
         i=3
-        OSVERSION=`$CAT /etc/*-release | $HEAD -4 | tail -1 | $AWK -F'=' {' print $2 '}`
+        OSVERSION=`$CAT /etc/*-release | $HEAD -4 | $TAIL -1 | $AWK -F'=' {' print $2 '}`
         $ECHO $OSVERSION
 elif [[ "$OSTYPE" == "Oracle" ]]; then
         i=4
         OSVERSION=`$CAT /etc/*-release | $HEAD -1`
         $ECHO $OSVERSION
 else	
-		$ECHO $OSVERSION
 		$ECHO $Erro
 fi
-
-export $i;
 
 done
 
@@ -85,7 +118,7 @@ banner() {
 clear
 ${ECHO} ""
 ${ECHO} "----------------------------------------------"
-${ECHO} "Aplicação de Hardening Linux"
+${ECHO} "AplicaÃ§Ã£o de Hardening Linux"
 ${ECHO} "Sistema Operacional Homologado:"
 ${ECHO} "Centos 7, Centos 8 Stream, Oracle Linux 8, Ubuntu 20.04, Debian 11"
 ${ECHO} -e $Erro
@@ -109,7 +142,7 @@ then
 	then
 		${ECHO} "O pacote logrotate ja esta instalado"
 	else
-		${ECHO} "O pacote do logrotate será instalado"
+		${ECHO} "O pacote do logrotate serÃ¡ instalado"
 		$APTGET install logrotate
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
@@ -118,7 +151,7 @@ then
 	then
 		${ECHO} "O pacote logrotate ja esta instalado"
 	else
-		${ECHO} "O pacote do logrotate será instalado"
+		${ECHO} "O pacote do logrotate serÃ¡ instalado"
 		$YUM install logrotate
 	fi
 fi
@@ -131,7 +164,7 @@ then
 	then
 		${ECHO} "O pacote rsyslog ja esta instalado"
 	else
-		${ECHO} "O pacote do rsyslog será instalado"
+		${ECHO} "O pacote do rsyslog serÃ¡ instalado"
 		$APTGET install rsyslog
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
@@ -140,7 +173,7 @@ then
 	then
 		${ECHO} "O pacote rsyslog ja esta instalado"
 	else
-		${ECHO} "O pacote do rsyslog será instalado"
+		${ECHO} "O pacote do rsyslog serÃ¡ instalado"
 		$YUM install rsyslog
 	fi
 fi
@@ -161,13 +194,13 @@ fi
 }
 
 systemlogs_perm() {
-$ECHO "Ajuste das permissões de logs"
+$ECHO "Ajuste das permissÃµes de logs"
 $FIND /var/log/ -type f -exec $CHMOD 600 {} \;
 
 $CHMOD +t /var/tmp
 $CHMOD +t /tmp
 
-$ECHO "Ajuste das permissões do arquivo wtmp"
+$ECHO "Ajuste das permissÃµes do arquivo wtmp"
 if ls /var/log/ | $GREP wtmp > /dev/null
 then 
 	$ECHO "o arquivo wtmp ja existe"
@@ -179,7 +212,7 @@ fi
 }
 
 home_perm() {
-$ECHO "Ajuste das permissões do home"
+$ECHO "Ajuste das permissÃµes do home"
 $FIND /home/ -type d -exec $CHMOD 700 {} \;
 
 $CHMOD 755 /home
@@ -368,7 +401,7 @@ else
         umask 077
 fi
 
-$ECHO "Ajustando a validação de senhas:"
+$ECHO "Ajustando a validaÃ§Ã£o de senhas:"
 $SED -i -- 's/PASS_MIN_LEN/#PASS_MIN_LEN/g' /etc/login.defs
 $SED -i -- 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs
 $SED -i -- 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs
@@ -386,7 +419,7 @@ $ECHO "export TMOUT=7200" >> /etc/profile
 }
 
 remove_nologin() {
-$ECHO "Removendo permissão de login"
+$ECHO "Removendo permissÃ£o de login"
 $USERMOD --shell /sbin/nologin bin
 $USERMOD --shell /sbin/nologin daemon
 $USERMOD --shell /sbin/nologin adm
@@ -408,7 +441,7 @@ $USERMOD --shell /sbin/nologin sshd
 }
 
 change_perm_passwd() {
-$ECHO "Ajustando permissões de arquivos de senhas"
+$ECHO "Ajustando permissÃµes de arquivos de senhas"
 $CHOWN root:root /etc/passwd
 $CHOWN root:root /etc/shadow
 $CHOWN root:root /etc/group
@@ -421,7 +454,7 @@ $CHMOD 600 /etc/logrotate.conf
 }
 
 change_perm_crontab() {
-$ECHO "Ajustando permissões do crontab e cron"
+$ECHO "Ajustando permissÃµes do crontab e cron"
 $CHOWN root:root /etc/crontab
 $CHMOD 600 /etc/crontab
 
