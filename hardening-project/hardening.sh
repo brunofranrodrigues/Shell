@@ -73,8 +73,9 @@ elif [[ "$OSTYPE" == "Oracle" ]]; then
 else	
 		$ECHO $OSVERSION
 		$ECHO $Erro
-
 fi
+
+export $i;
 
 done
 
