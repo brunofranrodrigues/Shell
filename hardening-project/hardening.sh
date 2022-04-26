@@ -495,6 +495,11 @@ $CHMOD g-s /usr/bin/write
 
 ssh_security() {
 $ECHO "Ajustando os parametros do SSHD:"
+$SED -i -- 's/Protocol/#Protocol/g' /etc/ssh/sshd_config
+$SED -i -- 's/UsePrivilegeSeparation/#UsePrivilegeSeparation/g' /etc/ssh/sshd_config
+$SED -i -- 's/RSAAuthentication/#RSAAuthentication/g' /etc/ssh/sshd_config
+$SED -i -- 's/RhostsRSAAuthentication/#RhostsRSAAuthentication/g' /etc/ssh/sshd_config
+$SED -i -- 's/GSSAPIAuthentication/#GSSAPIAuthentication/g' /etc/ssh/sshd_config
 $SED -i -- 's/PermitEmptyPasswords/#PermitEmptyPasswords/g' /etc/ssh/sshd_config
 $SED -i -- 's/PermitRootLogin/#PermitRootLogin/g' /etc/ssh/sshd_config
 $SED -i -- 's/IgnoreRhosts/#IgnoreRhosts/g' /etc/ssh/sshd_config
@@ -513,6 +518,7 @@ $SED -i -- 's/PasswordAuthenti$CATion/#PasswordAuthenti$CATion/g' /etc/ssh/sshd_
 $SED -i -- 's/ChallengeResponseAuthenti$CATion/#ChallengeResponseAuthenti$CATion/g' /etc/ssh/sshd_config
 $SED -i -- 's/MaxStartups/#MaxStartups/g' /etc/ssh/sshd_config
 
+$ECHO "Protocol 2" >> /etc/ssh/sshd_config
 $ECHO "PermitEmptyPasswords no" >> /etc/ssh/sshd_config
 $ECHO "PermitRootLogin no" >> /etc/ssh/sshd_config
 $ECHO "IgnoreRhosts yes" >> /etc/ssh/sshd_config
@@ -529,6 +535,10 @@ $ECHO "KerberosAuthenti$CATion no" >> /etc/ssh/sshd_config
 $ECHO "PubkeyAuthenti$CATion no" >> /etc/ssh/sshd_config
 $ECHO "PasswordAuthenti$CATion yes" >> /etc/ssh/sshd_config
 $ECHO "ChallengeResponseAuthenti$CATion no" >> /etc/ssh/sshd_config
+$ECHO "UsePrivilegeSeparation yes" >> /etc/ssh/sshd_config
+$ECHO "RSAAuthentication no" >> /etc/ssh/sshd_config
+$ECHO "RhostsRSAAuthentication no" >> /etc/ssh/sshd_config
+$ECHO "GSSAPIAuthentication no" >> /etc/ssh/sshd_config
 $ECHO "MaxStartups 3:50:6" >> /etc/ssh/sshd_config
 }
 
