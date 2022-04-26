@@ -237,7 +237,6 @@ done
 }
 
 banner() {
-
 ${ECHO} "" 
 ${ECHO} "----------------------------------------------"
 ${ECHO} "LVS - Linux Validate Script - Client Version"
@@ -463,8 +462,8 @@ cmd=$(${GETFACL} -p /etc/shadow | ${GREP} -e "owner: root")
 [ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
 cmd=$(${GETFACL} -p /etc/gshadow | ${GREP} -e "owner: root")
 [ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-[ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-[ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ `stat -c '%a' /etc/shadow` -eq 400 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ `stat -c '%a' /etc/gshadow` -eq 400 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
 
 # Bloquear senhas dos usuarios de sistema - BUG
 ${ECHO} ${MN} "Checking (Bloquear senhas dos usuarios de sistema)  "
@@ -550,8 +549,6 @@ else
 fi
 }
 
-
-
 chk_motd() {
 # Tested on CentOS 6.2 x64
 # Defina um MOTD para alerta
@@ -629,7 +626,7 @@ chk_final() {
 if [ ${COUNTER} -gt 0 ]; then
      ${ECHO} ${MC} ""
      ${ECHO} ${MC} "#################################################"
-     ${ECHO} ${MC} "#  Checklist ${RED}[FAIL]${UNCOLOR} ${YELLOW} - ${COUNTER} items are missing${UNCOLOR}    #"
+     ${ECHO} ${MC} "#  Checklist ${RED}[FAIL]${UNCOLOR} ${YELLOW} - ${COUNTER} items are missing${UNCOLOR}     #"
      ${ECHO} ${MC} "#################################################"
      ${ECHO} ${MC} ""
 else
