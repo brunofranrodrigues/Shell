@@ -38,6 +38,19 @@ YUM=`which yum`
 RPM=`which rpm`
 DPKG=`which dpkg`
 NOLOGIN=`which nologin`
+MOUNT=`which mount`
+UMOUNT=`which umount`
+NETREPORT=`which netreport`
+AT=`which at`
+CHAGE=`which chage`
+CHFN=`which chfn`
+CHSH=`which chsh`
+GPASSWD=`which gpasswd`
+LOCATE=`which locate`
+NEWGRP=`which newgrp`
+SSHAGENT=`which ssh-agent`
+WALL=`which wall`
+WRITE=`which write`
 opc=0
 
 # ---------------------------------------
@@ -478,19 +491,19 @@ $CHMOD -R go-rwx /etc/cron.d
 
 chnage_suids()  {
 $ECHO "Ajustando SUID dos binarios"
-$CHMOD g-s /bin/mount
-$CHMOD g-s /bin/umount
-$CHMOD g-s /sbin/netreport
-$CHMOD g-s /usr/bin/at
-$CHMOD g-s /usr/bin/chage
-$CHMOD g-s /usr/bin/chfn
-$CHMOD g-s /usr/bin/chsh
-$CHMOD g-s /usr/bin/gpasswd
-$CHMOD g-s /usr/bin/locate
-$CHMOD g-s /usr/bin/newgrp
-$CHMOD g-s /usr/bin/ssh-agent
-$CHMOD g-s /usr/bin/wall
-$CHMOD g-s /usr/bin/write
+$CHMOD g-s $MOUNT
+$CHMOD g-s $UMOUNT
+$CHMOD g-s $NETREPORT
+$CHMOD g-s $AT
+$CHMOD g-s $CHAGE
+$CHMOD g-s $CHFN
+$CHMOD g-s $CHSH
+$CHMOD g-s $GPASSWD
+$CHMOD g-s $LOCATE
+$CHMOD g-s $NEWGRP
+$CHMOD g-s $SSHAGENT
+$CHMOD g-s $WALL
+$CHMOD g-s $WRITE
 }
 
 ssh_security() {
