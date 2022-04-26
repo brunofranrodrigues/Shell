@@ -4,7 +4,7 @@
 # ============================================                               #
 #                                                                            #
 # Copyright (c) 2022 by Bruno Rodrigues - brunofranrodrigues@gmail.com       #
-# Last Updated 24/04/2022                                                    #
+# Last Updated 26/04/2022                                                    #
 #                                                                            #
 # This program is free software. You can redistribute it and/or modify       #
 # it under the terms of the GNU General Public License as published by       #
@@ -523,7 +523,7 @@ $ECHO "AllowTcpForwarding no" >> /etc/ssh/sshd_config
 $ECHO "X11Forwarding no" >> /etc/ssh/sshd_config
 $ECHO "TCPKeepAlive yes" >> /etc/ssh/sshd_config
 $ECHO "LoginGraceTime 30" >> /etc/ssh/sshd_config
-$ECHO "U$SEDNS no" >> /etc/ssh/sshd_config
+$ECHO "UseDNS no" >> /etc/ssh/sshd_config
 $ECHO "GSSAPIAuthenti$CATion no" >> /etc/ssh/sshd_config
 $ECHO "KerberosAuthenti$CATion no" >> /etc/ssh/sshd_config
 $ECHO "PubkeyAuthenti$CATion no" >> /etc/ssh/sshd_config
