@@ -491,19 +491,19 @@ $CHMOD -R go-rwx /etc/cron.d
 
 chnage_suids()  {
 $ECHO "Ajustando SUID dos binarios"
-$CHMOD g-s $MOUNT
-$CHMOD g-s $UMOUNT
-$CHMOD g-s $NETREPORT
-$CHMOD g-s $AT
-$CHMOD g-s $CHAGE
-$CHMOD g-s $CHFN
-$CHMOD g-s $CHSH
-$CHMOD g-s $GPASSWD
-$CHMOD g-s $LOCATE
-$CHMOD g-s $NEWGRP
-$CHMOD g-s $SSHAGENT
-$CHMOD g-s $WALL
-$CHMOD g-s $WRITE
+$CHMOD 4755 $MOUNT
+$CHMOD 4755 $UMOUNT
+$CHMOD 4755 $NETREPORT
+$CHMOD 4755 $AT
+$CHMOD 4755 $CHAGE
+$CHMOD 4755 $CHFN
+$CHMOD 4755 $CHSH
+$CHMOD 4755 $GPASSWD
+$CHMOD 4755 $LOCATE
+$CHMOD 4755 $NEWGRP
+$CHMOD 4755 $SSHAGENT
+$CHMOD 4755 $WALL
+$CHMOD 4755 $WRITE
 }
 
 ssh_security() {
@@ -597,5 +597,6 @@ change_tmout
 remove_nologin
 change_perm_passwd
 change_perm_crontab
+chnage_suids
 ssh_security
 kernel_security
