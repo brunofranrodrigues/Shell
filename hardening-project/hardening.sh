@@ -506,6 +506,7 @@ $SED -i -- 's/IgnoreRhosts/#IgnoreRhosts/g' /etc/ssh/sshd_config
 $SED -i -- 's/LoginGraceTime/#LoginGraceTime/g' /etc/ssh/sshd_config
 $SED -i -- 's/MaxAuthTries/#MaxAuthTries/g' /etc/ssh/sshd_config
 $SED -i -- 's/StrictModes/#StrictModes/g' /etc/ssh/sshd_config
+$SED -i -- 's/SyslogFacility/#SyslogFacility/g' /etc/ssh/sshd_config
 $SED -i -- 's/AllowTcpForwarding/#AllowTcpForwarding/g' /etc/ssh/sshd_config
 $SED -i -- 's/X11Forwarding/#X11Forwarding/g' /etc/ssh/sshd_config
 $SED -i -- 's/TCPKeepAlive/#TCPKeepAlive/g' /etc/ssh/sshd_config
@@ -526,6 +527,7 @@ $ECHO "LoginGraceTime 45" >> /etc/ssh/sshd_config
 $ECHO "MaxAuthTries 3" >> /etc/ssh/sshd_config
 $ECHO "StrictModes yes" >> /etc/ssh/sshd_config
 $ECHO "AllowTcpForwarding no" >> /etc/ssh/sshd_config
+$ECHO "SyslogFacility AUTHPRIV" >> /etc/ssh/sshd_config
 $ECHO "X11Forwarding no" >> /etc/ssh/sshd_config
 $ECHO "TCPKeepAlive yes" >> /etc/ssh/sshd_config
 $ECHO "LoginGraceTime 30" >> /etc/ssh/sshd_config
