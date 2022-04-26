@@ -18,6 +18,7 @@
 # Environment variables
 # ---------------------------------------
 Erro="Sistema nao homologado"
+OSVERSION=""
 OS=""
 MN="-n"
 MC="-e"
@@ -200,26 +201,65 @@ UNCOLOR="\033[0m"
 
 chk_rootuser() {
 if [[ $UID -ne 0 ]]; then
-     echo "$0 must be run as root"
+     $ECHO "$0 must be run as root"
      exit 1
 fi
 }
-banner() {
 
-${ECHO} "" 
+check_release(){
+OSTYPE=('CentOS' 'Debian' 'Ubuntu' 'Oracle')
+
+for OSTYPE in $($CAT /etc/*-release | $GREP ^NAME | $CUT -d '"' -f 2 | $AWK '{print $1}')
+do
+
+if [[ "$OSTYPE" == "CentOS" ]]; then
+        i=1
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Debian" ]]; then
+        i=2
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1 | $AWK -F'=' {' print $2 '}`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Ubuntu" ]]; then
+        i=3
+        OSVERSION=`$CAT /etc/*-release | $HEAD -4 | $TAIL -1 | $AWK -F'=' {' print $2 '}`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Oracle" ]]; then
+        i=4
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1`
+        $ECHO $OSVERSION
+else	
+		$ECHO $Erro
+fi
+
+done
+
+}
+
+banner() {
+clear
+${ECHO} ""
 ${ECHO} "----------------------------------------------"
-${ECHO} "LVS - Linux Validate Script - Client Version"
+${ECHO} "Validacao de Hardening Linux"
+${ECHO} "Sistema Operacional Homologado:"
+${ECHO} "Centos 7, Centos 8 Stream, Oracle Linux 8, Ubuntu 20.04, Debian 11"
+if [[ $i == 1 ]] || [[ $i == 2 ]] || [[ $i == 3 ]] || [[ $i == 4 ]];
+then
+
+else 
+${ECHO} -e $Erro
+fi
 ${ECHO} "----------------------------------------------"
-${ECHO} "" 
-${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}" 
+${ECHO} ""
+${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}"
 
 GETIP=$(ip a | grep "inet" | $GREP -v 127.0.0.1 | $TAIL -2 | $HEAD -1 | $AWK -F' ' {' print $2 '})
 cmd=$(for i in ${GETIP}; do ${ECHO} ${MN} "${i} ";done)
 ${ECHO} ${MC} "${YELLOW}OS Version:${UNCOLOR} $OSVERSION"
 ${ECHO} ${MC} "${YELLOW}Hostname:${UNCOLOR} `hostname`"
 ${ECHO} ${MC} "${YELLOW}IP(s):${UNCOLOR} ${cmd}"
-${ECHO} "" 
-${ECHO} "" 
+${ECHO} ""
+${ECHO} ""
 }
 
 chk_bootloader() {
@@ -518,35 +558,7 @@ else
 fi
 }
 
-check_release(){
-OSTYPE=('CentOS' 'Debian' 'Ubuntu' 'Oracle')
 
-for OSTYPE in $($CAT /etc/*-release | $GREP ^NAME | $CUT -d '"' -f 2 | $AWK '{print $1}')
-do
-
-if [[ "$OSTYPE" == "CentOS" ]]; then
-        i=1
-        OSVERSION=`$CAT /etc/*-release | $HEAD -1`
-        $ECHO $OSVERSION
-elif [[ "$OSTYPE" == "Debian" ]]; then
-        i=2
-        OSVERSION=`$CAT /etc/*-release | $HEAD -1 | $AWK -F'=' {' print $2 '}`
-        $ECHO $OSVERSION
-elif [[ "$OSTYPE" == "Ubuntu" ]]; then
-        i=3
-        OSVERSION=`$CAT /etc/*-release | $HEAD -4 | $TAIL -1 | $AWK -F'=' {' print $2 '}`
-        $ECHO $OSVERSION
-elif [[ "$OSTYPE" == "Oracle" ]]; then
-        i=4
-        OSVERSION=`$CAT /etc/*-release | $HEAD -1`
-        $ECHO $OSVERSION
-else	
-		$ECHO $Erro
-fi
-
-done
-
-}
 
 chk_motd() {
 # Tested on CentOS 6.2 x64
@@ -642,10 +654,9 @@ fi
 # Init
 # ---------------------------------------
 
-
-banner
-check_release
 chk_rootuser
+check_release
+banner
 chk_bootloader
 chk_remoteroot
 chk_systemlogs_perm
