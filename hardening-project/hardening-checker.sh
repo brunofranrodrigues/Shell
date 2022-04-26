@@ -43,8 +43,22 @@ TR=`which tr`
 TAIL=`which tail`
 GETFACL=`which getfacl`
 LSATTR=`which lsattr`
+MOUNT=`which mount`
+UMOUNT=`which umount`
+NETREPORT=`which netreport`
+AT=`which at`
+CHAGE=`which chage`
+CHFN=`which chfn`
+CHSH=`which chsh`
+GPASSWD=`which gpasswd`
+LOCATE=`which locate`
+NEWGRP=`which newgrp`
+SSHAGENT=`which ssh-agent`
+WALL=`which wall`
+WRITE=`which write`
+
 PATH=$PATH:/sbin:/bin
-export PATH
+export PATH="${PATH:+$PATH:}/sbin:/usr/sbin:/bin:/usr/bin"
 
 
 # ---------------------------------------
@@ -131,23 +145,19 @@ smart"
 # ---------------------------------------
 # SUIDs *NAO* permitidos
 # ---------------------------------------
-DENYSIDS="/bin/mount
-/bin/umount
-/sbin/netreport
-/usr/bin/at
-/usr/bin/chage
-/usr/bin/chfn
-/usr/bin/chsh
-/usr/bin/gpasswd
-/usr/bin/locate
-/usr/bin/newgrp
-/usr/bin/ssh-agent
-/usr/bin/wall
-/usr/bin/write
-/usr/libexec/openssh/ssh-keysign
-/usr/libexec/utempter/utempter
-/usr/sbin/sendmail.postfix
-/usr/sbin/usernetctl"
+DENYSIDS="$MOUNT
+$UMOUNT
+$NETREPORT
+$AT
+$CHAGE
+$CHFN
+$CHSH
+$GPASSWD
+$LOCATE
+$NEWGRP
+$SSHAGENT
+$WALL
+$WRITE"
 
 # ---------------------------------------
 # Usuarios padroes do sistema
@@ -646,7 +656,7 @@ fi
 chk_rootuser
 check_release
 banner
-chk_bootloader
+#chk_bootloader
 chk_remoteroot
 chk_systemlogs_perm
 chk_logrotate
