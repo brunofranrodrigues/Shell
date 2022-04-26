@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # $Linux: LVS.sh,v criação 1.0 2013/02/14 12:27 fmotta Exp $
 # $Linux: LVS.sh,v revisão 1.0 2022/01/19 08:19 brfrodrigues Exp $
@@ -17,6 +17,7 @@
 # ---------------------------------------
 # Environment variables
 # ---------------------------------------
+Erro="Sistema nao homologado"
 OS=""
 MN="-n"
 MC="-e"
@@ -30,6 +31,8 @@ CHATTR=`which chattr`
 CHOWN=`which chown`
 CHMOD=`which chmod`
 USERMOD=`which usermod`
+CUT=`which cut`
+CAT=`which cat`
 AWK=`which awk`
 ECHO=`which echo`
 GREP=`which grep`
@@ -210,9 +213,9 @@ ${ECHO} "----------------------------------------------"
 ${ECHO} "" 
 ${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}" 
 
-GETIP=$(ifconfig | grep "inet addr" | grep -v 127.0.0.1| awk -F':' {' print $2 '} | awk -F' ' {' print $1 '})
+GETIP=$(ip a | grep "inet" | $GREP -v 127.0.0.1 | $TAIL -2 | $HEAD -1 | $AWK -F' ' {' print $2 '})
 cmd=$(for i in ${GETIP}; do ${ECHO} ${MN} "${i} ";done)
-${ECHO} ${MC} "${YELLOW}OS Version:${UNCOLOR} `cat /etc/redhat-release`"
+${ECHO} ${MC} "${YELLOW}OS Version:${UNCOLOR} $OSVERSION"
 ${ECHO} ${MC} "${YELLOW}Hostname:${UNCOLOR} `hostname`"
 ${ECHO} ${MC} "${YELLOW}IP(s):${UNCOLOR} ${cmd}"
 ${ECHO} "" 
@@ -515,10 +518,34 @@ else
 fi
 }
 
-
-
 check_release(){
-[ -f /etc/redhat-release ] && ${ECHO} -e "" || ${ECHO} -e "\033[33;1m[WARNING!]\033[m Script not tested with S.O. version"
+OSTYPE=('CentOS' 'Debian' 'Ubuntu' 'Oracle')
+
+for OSTYPE in $($CAT /etc/*-release | $GREP ^NAME | $CUT -d '"' -f 2 | $AWK '{print $1}')
+do
+
+if [[ "$OSTYPE" == "CentOS" ]]; then
+        i=1
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Debian" ]]; then
+        i=2
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1 | $AWK -F'=' {' print $2 '}`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Ubuntu" ]]; then
+        i=3
+        OSVERSION=`$CAT /etc/*-release | $HEAD -4 | $TAIL -1 | $AWK -F'=' {' print $2 '}`
+        $ECHO $OSVERSION
+elif [[ "$OSTYPE" == "Oracle" ]]; then
+        i=4
+        OSVERSION=`$CAT /etc/*-release | $HEAD -1`
+        $ECHO $OSVERSION
+else	
+		$ECHO $Erro
+fi
+
+done
+
 }
 
 chk_motd() {
@@ -642,4 +669,4 @@ chk_motd
 ssh_security
 improve_pass_hash_algorithm
 chk_final
-rm -f $0
+#rm -f $0
