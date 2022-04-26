@@ -124,7 +124,7 @@ ${ECHO} "Sistema Operacional Homologado:"
 ${ECHO} "Centos 7, Centos 8 Stream, Oracle Linux 8, Ubuntu 20.04, Debian 11"
 if [[ $i == 1 ]] || [[ $i == 2 ]] || [[ $i == 3 ]] || [[ $i == 4 ]];
 then
-
+${ECHO} "----------------------------------------------"
 else 
 ${ECHO} -e $Erro
 fi
