@@ -237,29 +237,21 @@ done
 }
 
 banner() {
-clear
-${ECHO} ""
-${ECHO} "----------------------------------------------"
-${ECHO} "Validacao de Hardening Linux"
-${ECHO} "Sistema Operacional Homologado:"
-${ECHO} "Centos 7, Centos 8 Stream, Oracle Linux 8, Ubuntu 20.04, Debian 11"
-if [[ $i == 1 ]] || [[ $i == 2 ]] || [[ $i == 3 ]] || [[ $i == 4 ]];
-then
 
-else 
-${ECHO} -e $Erro
-fi
+${ECHO} "" 
 ${ECHO} "----------------------------------------------"
-${ECHO} ""
-${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}"
+${ECHO} "LVS - Linux Validate Script - Client Version"
+${ECHO} "----------------------------------------------"
+${ECHO} "" 
+${ECHO} ${MC} "${RED}[Host Configuration]${INCOLOR}" 
 
 GETIP=$(ip a | grep "inet" | $GREP -v 127.0.0.1 | $TAIL -2 | $HEAD -1 | $AWK -F' ' {' print $2 '})
 cmd=$(for i in ${GETIP}; do ${ECHO} ${MN} "${i} ";done)
 ${ECHO} ${MC} "${YELLOW}OS Version:${UNCOLOR} $OSVERSION"
 ${ECHO} ${MC} "${YELLOW}Hostname:${UNCOLOR} `hostname`"
 ${ECHO} ${MC} "${YELLOW}IP(s):${UNCOLOR} ${cmd}"
-${ECHO} ""
-${ECHO} ""
+${ECHO} "" 
+${ECHO} "" 
 }
 
 chk_bootloader() {
