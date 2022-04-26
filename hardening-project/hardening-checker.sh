@@ -487,7 +487,7 @@ done
 chk_su() {
 # Limitar uso do comando su
 ${ECHO} ${MN} "Checking (Limitar uso do comando su)  "
-cmd=$(${EGREP} "^auth.*pam_wheel.so.*use_uid" /etc/pam.d/su)
+cmd=$(${EGREP} "^auth.*pam_wheel.so.*wheel" /etc/pam.d/su)
 [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
 }
 
@@ -654,9 +654,9 @@ chk_umask
 chk_authpasswd
 chk_crontab
 chk_timeout
-chk_etcservices
+#chk_etcservices
 chk_unservices
-chk_filesystems
+#chk_filesystems
 chk_passwd
 chk_suids
 chk_su
