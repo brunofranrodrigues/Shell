@@ -4,7 +4,7 @@
 # ============================================                               #
 #                                                                            #
 # Copyright (c) 2022 by Bruno Rodrigues - brunofranrodrigues@gmail.com       #
-# Last Updated 26/04/2022                                                    #
+# Last Updated 24/04/2022                                                    #
 #                                                                            #
 # This program is free software. You can redistribute it and/or modify       #
 # it under the terms of the GNU General Public License as published by       #
@@ -454,8 +454,8 @@ $CHOWN root:root /etc/group
 $CHOWN root:root /etc/gshadow
 $CHMOD 644 /etc/passwd
 $CHMOD 644 /etc/group
-$CHMOD 400 /etc/shadow
-$CHMOD 400 /etc/gshadow
+$CHMOD 000 /etc/shadow
+$CHMOD 000 /etc/gshadow
 $CHMOD 600 /etc/logrotate.conf
 }
 
