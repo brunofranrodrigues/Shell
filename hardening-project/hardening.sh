@@ -380,7 +380,7 @@ Em caso de problemas envie email para l-monitor-sec@uolinc.com
 EOF
 fi
 
-$ECHO "Validando issue.net"
+$ECHO "Validando /etc/issue.net"
 if ls /etc | $GREP issue.net > /dev/null
 then 
 	$ECHO "o arquivo motd ja existe"
@@ -434,7 +434,7 @@ $ECHO "PASS_WARN_AGE 7" >> /etc/login.defs
 
 change_tmout() {
 $ECHO "readonly TMOUT=7200" >> /etc/profile
-$ECHO "export TMOUT=7200" >> /etc/profile
+$ECHO "export TMOUT" >> /etc/profile
 }
 
 remove_nologin() {
@@ -491,32 +491,32 @@ $CHMOD -R go-rwx /etc/cron.d
 
 chnage_suids()  {
 $ECHO "Ajustando SUID dos binarios"
-$CHMOD u-s $MOUNT
-$CHMOD u-s $UMOUNT
-$CHMOD u-s $NETREPORT
-$CHMOD u-s $AT
-$CHMOD u-s $CHAGE
-$CHMOD u-s $CHFN
-$CHMOD u-s $CHSH
-$CHMOD u-s $GPASSWD
-$CHMOD u-s $LOCATE
-$CHMOD u-s $NEWGRP
-$CHMOD u-s $SSHAGENT
-$CHMOD u-s $WALL
-$CHMOD u-s $WRITE
-$CHMOD 755 $MOUNT
-$CHMOD 755 $UMOUNT
-$CHMOD 755 $NETREPORT
-$CHMOD 755 $AT
-$CHMOD 755 $CHAGE
-$CHMOD 755 $CHFN
-$CHMOD 755 $CHSH
-$CHMOD 755 $GPASSWD
-$CHMOD 755 $LOCATE
-$CHMOD 755 $NEWGRP
-$CHMOD 755 $SSHAGENT
-$CHMOD 755 $WALL
-$CHMOD 755 $WRITE
+$CHMOD "u-s" $MOUNT
+$CHMOD "u-s" $UMOUNT
+$CHMOD "u-s" $NETREPORT
+$CHMOD "u-s" $AT
+$CHMOD "u-s" $CHAGE
+$CHMOD "u-s" $CHFN
+$CHMOD "u-s" $CHSH
+$CHMOD "u-s" $GPASSWD
+$CHMOD "u-s" $LOCATE
+$CHMOD "u-s" $NEWGRP
+$CHMOD "u-s" $SSHAGENT
+$CHMOD "u-s" $WALL
+$CHMOD "u-s" $WRITE
+$CHMOD "755" $MOUNT
+$CHMOD "755" $UMOUNT
+$CHMOD "755" $NETREPORT
+$CHMOD "755" $AT
+$CHMOD "755" $CHAGE
+$CHMOD "755" $CHFN
+$CHMOD "755" $CHSH
+$CHMOD "755" $GPASSWD
+$CHMOD "755" $LOCATE
+$CHMOD "755" $NEWGRP
+$CHMOD "755" $SSHAGENT
+$CHMOD "755" $WALL
+$CHMOD "755" $WRITE
 }
 
 ssh_security() {
@@ -593,6 +593,12 @@ EOF
 fi
 }
 
+disable_coredump() {
+$ECHO "Desabilitando core dump:"
+$ECHO "* hard core 0" >> /etc/security/limits.conf
+$ECHO "fs.suid_dumpable = 0" >> /etc/security/limits.conf
+}
+
 chk_rootuser
 check_release
 banner
@@ -613,3 +619,4 @@ change_perm_crontab
 chnage_suids
 ssh_security
 kernel_security
+disable_coredump
