@@ -596,7 +596,7 @@ fi
 disable_coredump() {
 $ECHO "Desabilitando core dump:"
 $ECHO "* hard core 0" >> /etc/security/limits.conf
-$ECHO "fs.suid_dumpable = 0" >> /etc/security/limits.conf
+$ECHO "fs.suid_dumpable = 0" >> /etc/sysctl.conf
 }
 
 chk_rootuser
