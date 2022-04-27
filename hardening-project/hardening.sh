@@ -176,6 +176,21 @@ then
 fi
 }
 
+change_logrotate() {
+$ECHO "Ajustando os parametros do logrotate:"
+$SED -i -- 's/create/create 0600 root root/g' /etc/logrotate.conf
+
+
+$CAT <<EOF >> /etc/logrotate.conf
+/var/log/wtmp {
+    monthly
+    minsize 1M
+    create 0640 root utmp
+    rotate 1
+}
+EOF
+}
+
 verify_rsyslog(){
 if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
@@ -603,6 +618,7 @@ chk_rootuser
 check_release
 banner
 verify_logrotate
+change_logrotate
 verify_rsyslog
 pam_security
 change_remoteroot
