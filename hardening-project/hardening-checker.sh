@@ -57,6 +57,7 @@ SSHAGENT=`which ssh-agent`
 WALL=`which wall`
 WRITE=`which write`
 LS=`which ls`
+opc2=0
 
 PATH=$PATH:/sbin:/bin
 export PATH="${PATH:+$PATH:}/sbin:/usr/sbin:/bin:/usr/bin"
@@ -78,8 +79,6 @@ OCREDIT="1"         # Quantos caracteres especiais devem conter na senha
 REMEMBER="4"        # Historico de senhas que nao podem ser utilizadas
 TMOUT="7200"    # Defina o tempo de timeout das sessoes idle no servidor (em segundos) / 86400 = 1 dia
 ALLOWCRON="root"    # Usuarios permitidos para utilizarem o crontab
-SYSLOGSRV="10.154.4.103" # Servidor syslog
-SYSLOGFILE="/etc/rsyslog.conf"         # Arquivo principal do syslog
 HA_PROFILE="cliente"     # (uoldiveo/cliente) Defina o profile do script, 'uoldiveo' para servidores internos e 'cliente' para servidores de clientes
 GRUBCONF="/etc/grub.conf" # Path para o arquivo de configuracao do GRUB
 
@@ -576,6 +575,49 @@ cmd=$(${GREP} "fs.suid_dumpable = 0" /etc/sysctl.conf)
 }
 
 chk_syslogsrv() {
+SYSLOGFILE="/etc/rsyslog.conf"         # Arquivo principal do syslog
+while	[ "$opc2" -lt 3 -o $opc2 -gt 4 ]
+do
+	echo -e "
+	+---------------------------------------------------+
+	|						    |
+	|   Validacao de area do servidor (Glete/Tambore)   |
+	|						    |
+	+---------------------------------------------------+
+		OPCAO	ACAO		
+		-----	----
+		  3	Glete
+                  4     Tambore
+		Entre com a opcao desejada: \c"
+	read opc
+done
+if [ $opc2 -eq 3 ];
+then
+	SYSLOGSRV="10.154.4.103" # Servidor syslog
+	${ECHO} "Checking (Restringindo acesso de visualizacao por outros nos logs do sistema)  "
+	if [ -f ${SYSLOGFILE} ] && [ ${SYSLOGFILE} = "/etc/rsyslog.conf" ]; then
+		SYSLOGS=`${GREP} -e '/var/log' ${SYSLOGFILE} | ${GREP} -v "programname"^ | awk -F" " {' print $2 '} | sed 's/^\-//g'`
+		for SYSLOG in ${SYSLOGS}; do
+			[ `stat -c '%a' ${i}` -eq 600 ] && ${ECHO} ${MC} " - logfile ${i} permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - logfile ${i} permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+		done
+	else
+		${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+		${ECHO} ${MC} "${YELLOW}Syslog configuration file not found, please set SYSLOGFILE setting on LVS Script${UNCOLOR}"
+	fi
+else
+	SYSLOGSRV="10.154.9.209" # Servidor syslog
+	${ECHO} "Checking (Restringindo acesso de visualizacao por outros nos logs do sistema)  "
+	if [ -f ${SYSLOGFILE} ] && [ ${SYSLOGFILE} = "/etc/rsyslog.conf" ]; then
+		SYSLOGS=`${GREP} -e '/var/log' ${SYSLOGFILE} | ${GREP} -v "programname"^ | awk -F" " {' print $2 '} | sed 's/^\-//g'`
+		for SYSLOG in ${SYSLOGS}; do
+			[ `stat -c '%a' ${i}` -eq 600 ] && ${ECHO} ${MC} " - logfile ${i} permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - logfile ${i} permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+		done
+	else
+		${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+		${ECHO} ${MC} "${YELLOW}Syslog configuration file not found, please set SYSLOGFILE setting on LVS Script${UNCOLOR}"
+	fi
+fi
+
 # Defina um syslog server
 ${ECHO} ${MN} "Checking (Defina um syslog server)  "
 if [ -f ${SYSLOGFILE} ]; then
