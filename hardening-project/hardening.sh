@@ -434,13 +434,12 @@ else
     $ECHO "Alterando o valor do umask para o recomendado"
     $ECHO "$($SED 's/022/077/' /etc/login.defs)" > /etc/login.defs
     $UMASKBIN 077
-	
 	if [[ $i == 2 ]] || [[ $i == 3 ]]
 	then
 		$ECHO "O valor do umask ja alterado"
 	elif [[ $i == 1 ]] || [[ $i == 4 ]]
 	then
-		$ECHO "$($SED 's/022/077/' /etc/bashrc)" > /etc/bashrc
+		$ECHO "$($SED 's/umask 022/umask 077/' /etc/bashrc)" > /etc/bashrc
 	fi
 fi
 
