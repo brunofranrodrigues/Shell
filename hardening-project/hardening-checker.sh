@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # $Linux: LVS.sh,v criação 1.0 2013/02/14 12:27 fmotta Exp $
-# $Linux: LVS.sh,v revisão 1.0 2022/01/19 08:19 brfrodrigues Exp $
+# $Linux: LVS.sh,v revisão 1.1 2022/04/28 08:19 brfrodrigues Exp $
 #
 # Author: Felippe de Meirelles Motta (fmotta at uoldiveo dot com)
 #
@@ -405,24 +405,47 @@ chk_authpasswd() {
 # Habilitar verificacao da trivialidade da senha
 # Definir tamanho de historico de senhas
 ${ECHO} "Checking (Politica de Senhas): "
-cmd=$(${EGREP} "PASS_MIN_LEN.*${PASS_MIN_LEN}" /etc/login.defs)
-[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-#cmd=$(${EGREP} "PASS_MIN_DAYS.*${PASS_MIN_DAYS}" /etc/login.defs)
-#[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "difok=${DIFOK}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] difok ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] difok ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "minlen=${PASS_MIN_LEN}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] minlen ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] minlen ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "dcredit=${DCREDIT}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] dcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] dcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "lcredit=${LCREDIT}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] lcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] lcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "ucredit=${UCREDIT}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ucredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ucredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "ocredit=${OCREDIT}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ocredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ocredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${EGREP} "remember=${REMEMBER}" /etc/pam.d/system-auth)
-[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] remember ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] remember ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+if [[ $i == 2 ]] || [[ $i == 3 ]]
+then
+    cmd=$(${EGREP} "PASS_MIN_LEN.*${PASS_MIN_LEN}" /etc/login.defs)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	#cmd=$(${EGREP} "PASS_MIN_DAYS.*${PASS_MIN_DAYS}" /etc/login.defs)
+	#[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "difok=${DIFOK}" /etc/pam.d/common-password)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] difok ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] difok ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "minlen=${PASS_MIN_LEN}" /etc/pam.d/common-password)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] minlen ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] minlen ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "dcredit=${DCREDIT}" /etc/pam.d/common-password)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] dcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] dcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "lcredit=${LCREDIT}" /etc/pam.d/common-password)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] lcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] lcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "ucredit=${UCREDIT}" /etc/pam.d/common-password)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] ucredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] ucredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "ocredit=${OCREDIT}" /etc/pam.d/common-password)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] ocredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] ocredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "remember=${REMEMBER}" /etc/pam.d/common-password)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] remember ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] remember ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+elif [[ $i == 1 ]] || [[ $i == 4 ]]
+then
+	cmd=$(${EGREP} "PASS_MIN_LEN.*${PASS_MIN_LEN}" /etc/login.defs)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	#cmd=$(${EGREP} "PASS_MIN_DAYS.*${PASS_MIN_DAYS}" /etc/login.defs)
+	#[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "difok=${DIFOK}" /etc/pam.d/system-auth)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] difok ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] difok ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "minlen=${PASS_MIN_LEN}" /etc/pam.d/system-auth)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] minlen ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] minlen ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "dcredit=${DCREDIT}" /etc/pam.d/system-auth)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] dcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] dcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "lcredit=${LCREDIT}" /etc/pam.d/system-auth)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] lcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] lcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "ucredit=${UCREDIT}" /etc/pam.d/system-auth)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ucredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ucredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "ocredit=${OCREDIT}" /etc/pam.d/system-auth)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ocredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ocredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	cmd=$(${EGREP} "remember=${REMEMBER}" /etc/pam.d/system-auth)
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] remember ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] remember ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+fi
 }
 
 chk_crontab() {
