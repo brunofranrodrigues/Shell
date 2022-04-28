@@ -53,6 +53,7 @@ WALL=`which wall`
 WRITE=`which write`
 UMASKBIN=`which umask`
 opc=0
+opc2=0
 
 # ---------------------------------------
 # Colors
@@ -593,6 +594,13 @@ $ECHO "GSSAPIAuthentication no" >> /etc/ssh/sshd_config
 $ECHO "MaxStartups 3:50:6" >> /etc/ssh/sshd_config
 }
 
+change_syslogsrv() {
+# Defina um syslog server
+${ECHO} ${MN} "Aplicando (Defina um syslog server)  "
+$ECHO "*.* @10.154.4.103:514" >> /etc/rsyslog.conf
+}
+
+
 kernel_security() {
 $ECHO "Validando o arquivo sysctl.conf"
 if ls /etc/ | $GREP sysctl.conf  > /dev/null
@@ -642,5 +650,6 @@ change_perm_passwd
 change_perm_crontab
 chnage_suids
 ssh_security
+change_syslogsrv
 kernel_security
 disable_coredump
