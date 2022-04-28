@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # $Linux: LVS.sh,v criação 1.0 2013/02/14 12:27 fmotta Exp $
-# $Linux: LVS.sh,v revisão 1.1 2022/04/28 08:19 brfrodrigues Exp $
+# $Linux: LVS.sh,v revisão 1.0 2022/01/19 08:19 brfrodrigues Exp $
 #
 # Author: Felippe de Meirelles Motta (fmotta at uoldiveo dot com)
 #
@@ -391,8 +391,15 @@ chk_umask() {
 # TESTADO
 # Definir umask padrao restritivo
 ${ECHO} ${MN} "Checking (Definir umask padrao restritivo)  "
-cmd=$(${GREP} -e "umask 077" /etc/bashrc)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+if [[ $i == 2 ]] || [[ $i == 3 ]]
+then
+  cmd=$(${GREP} -e '^UMASK' /etc/login.defs | grep "077")
+  [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+elif [[ $i == 1 ]] || [[ $i == 4 ]]
+then
+  cmd=$(${GREP} -e "umask 077" /etc/bashrc)
+  [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+fi
 }
 
 chk_authpasswd() {
@@ -700,6 +707,6 @@ chk_syslogsrv
 #chk_syslogd
 chk_motd
 ssh_security
-improve_pass_hash_algorithm
+#improve_pass_hash_algorithm
 chk_final
 #rm -f $0
