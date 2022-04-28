@@ -51,6 +51,7 @@ NEWGRP=`which newgrp`
 SSHAGENT=`which ssh-agent`
 WALL=`which wall`
 WRITE=`which write`
+UMASKBIN=`which umask`
 opc=0
 
 # ---------------------------------------
@@ -428,11 +429,19 @@ fi
 change_login_defs() {
 UMASK=`$CAT /etc/login.defs | $GREP UMASK | $TAIL -1 | $AWK '{ print $2 }'`
 if [ $UMASK -eq 077 ]; then
-        $ECHO "O valor do umask ja esta alterado"
+    $ECHO "O valor do umask ja esta alterado"
 else
-        $ECHO "Alterando o valor do umask para o recomendado"
-        $ECHO "$($SED 's/022/077/' /etc/login.defs)" > /etc/login.defs
-        umask 077
+    $ECHO "Alterando o valor do umask para o recomendado"
+    $ECHO "$($SED 's/022/077/' /etc/login.defs)" > /etc/login.defs
+    $UMASKBIN 077
+	
+	if [[ $i == 2 ]] || [[ $i == 3 ]]
+	then
+		$ECHO "O valor do umask ja alterado"
+	elif [[ $i == 1 ]] || [[ $i == 4 ]]
+	then
+		$ECHO "$($SED 's/022/077/' /etc/bashrc)" > /etc/bashrc
+	fi
 fi
 
 $ECHO "Ajustando a validacao de senhas:"
