@@ -1,18 +1,14 @@
-#!/bin/bash
-#
-# $Linux: LVS.sh,v criação 1.0 2013/02/14 12:27 fmotta Exp $
-# $Linux: LVS.sh,v revisão 1.0 2022/01/19 08:19 brfrodrigues Exp $
-#
-# Author: Felippe de Meirelles Motta (fmotta at uoldiveo dot com)
-#
-# Ensuring that all items were applied by linux team
-#
-# ChangeLog:
-# 1.0 - LVS (Linux Security Checklist Script) Released
-# 1.1 - Disable prelink service on Linux and some bug fixes
-#
-# TODO:
-# Debian Support
+##############################################################################
+# v0.1                                                                       #
+# ============================================                               #
+#                                                                            #
+# Copyright (c) 2022 by Bruno Rodrigues - brunofranrodrigues@gmail.com       #
+# Last Updated 24/04/2022                                                    #
+#                                                                            #
+# This program is free software. You can redistribute it and/or modify       #
+# it under the terms of the GNU General Public License as published by       #
+# the Free Software Foundation; either version 2 of the License.             #
+##############################################################################
 
 # ---------------------------------------
 # Environment variables
