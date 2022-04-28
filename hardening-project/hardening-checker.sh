@@ -460,11 +460,21 @@ fi
 chk_crontab() {
 # Restringir o uso do crontab
 ${ECHO} "Checking (Restringir o uso do crontab) "
-[ `stat -c '%a' /etc/crontab` -eq 600 ] && ${ECHO} ${MC} " - /etc/crontab permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${GETFACL} -p /etc/crontab | ${GREP} -e "owner: root")
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/crontab owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${GREP} root /etc/cron.allow)
-[ $? = 0 ] && ${ECHO} ${MC} " - root listed on /etc/cron.allow ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - root listed on /etc/cron.allow ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+if [[ $i == 2 ]] || [[ $i == 3 ]]
+then
+  [ `stat -c '%a' /etc/crontab` -eq 600 ] && ${ECHO} ${MC} " - /etc/crontab permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  cmd=$(${LS} -ltr /etc/crontab | ${AWK} '{ print $3 }' | ${GREP} -e "root")
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/crontab owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  cmd=$(${GREP} root /etc/cron.allow)
+  [ $? = 0 ] && ${ECHO} ${MC} " - root listed on /etc/cron.allow ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - root listed on /etc/cron.allow ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1)) 
+elif [[ $i == 1 ]] || [[ $i == 4 ]]
+then
+  [ `stat -c '%a' /etc/crontab` -eq 600 ] && ${ECHO} ${MC} " - /etc/crontab permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  cmd=$(${GETFACL} -p /etc/crontab | ${GREP} -e "owner: root")
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/crontab owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  cmd=$(${GREP} root /etc/cron.allow)
+  [ $? = 0 ] && ${ECHO} ${MC} " - root listed on /etc/cron.allow ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - root listed on /etc/cron.allow ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+fi
 }
 
 chk_timeout() {
