@@ -56,6 +56,7 @@ NEWGRP=`which newgrp`
 SSHAGENT=`which ssh-agent`
 WALL=`which wall`
 WRITE=`which write`
+LS=`which ls`
 
 PATH=$PATH:/sbin:/bin
 export PATH="${PATH:+$PATH:}/sbin:/usr/sbin:/bin:/usr/bin"
@@ -498,12 +499,23 @@ chk_passwd() {
 ## Arquivos de usuario, grupo e senhas
 # Protegendo arquivos e diretorios importantes
 ${ECHO} "Checking (Protegendo arquivos e diretorios importantes)  "
-cmd=$(${GETFACL} -p /etc/shadow | ${GREP} -e "owner: root")
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-cmd=$(${GETFACL} -p /etc/gshadow | ${GREP} -e "owner: root")
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-[ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-[ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+if [[ $i == 2 ]] || [[ $i == 3 ]]
+then
+  cmd=$(${LS} -ltr /etc/shadow | ${AWK} '{ print $3 }' | ${GREP} -e "root")
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  cmd=$(${LS} -ltr /etc/gshadow | ${AWK} '{ print $3 }' | ${GREP} -e "root")
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+elif [[ $i == 1 ]] || [[ $i == 4 ]]
+then
+  cmd=$(${GETFACL} -p /etc/shadow | ${GREP} -e "owner: root")
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  cmd=$(${GETFACL} -p /etc/gshadow | ${GREP} -e "owner: root")
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+fi
 
 # Bloquear senhas dos usuarios de sistema - BUG
 ${ECHO} ${MN} "Checking (Bloquear senhas dos usuarios de sistema)  "
