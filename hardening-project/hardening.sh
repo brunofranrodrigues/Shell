@@ -161,25 +161,25 @@ if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
 	if $DPKG -l | $GREP logrotate > /dev/null;
 	then
-		${ECHO} "O pacote logrotate ja esta instalado"
+		${ECHO} ${MC} "${GREEN} O pacote logrotate ja esta instalado ${UNCOLOR}"
 	else
-		${ECHO} "O pacote do logrotate sera instalado"
+		${ECHO} ${MC} "${GREEN} O pacote do logrotate sera instalado ${UNCOLOR}"
 		$APTGET install logrotate
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
 then
 	if $RPM -qa | $GREP logrotate > /dev/null;
 	then
-		${ECHO} "O pacote logrotate ja esta instalado"
+		${ECHO} ${MC} "${GREEN} O pacote logrotate ja esta instalado ${UNCOLOR}"
 	else
-		${ECHO} "O pacote do logrotate sera instalado"
+		${ECHO} ${MC} "${GREEN} O pacote do logrotate sera instalado ${UNCOLOR}"
 		$YUM install logrotate
 	fi
 fi
 }
 
 change_logrotate() {
-$ECHO "Ajustando os parametros do logrotate:"
+${ECHO} ${MC} "${GREEN} Ajustando os parametros do logrotate:  ${UNCOLOR}"
 $SED -i -- 's/create/create 0600 root root/g' /etc/logrotate.conf
 
 
@@ -198,24 +198,25 @@ if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
 	if $DPKG -l | $GREP rsyslog > /dev/null;
 	then
-		${ECHO} "O pacote rsyslog ja esta instalado"
+		${ECHO} ${MC} "${GREEN} O pacote rsyslog ja esta instalado ${UNCOLOR}"
 	else
-		${ECHO} "O pacote do rsyslog sera instalado"
+		${ECHO} ${MC} "${GREEN} O pacote do rsyslog sera instalado ${UNCOLOR}"
 		$APTGET install rsyslog
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
 then
 	if $RPM -qa | $GREP rsyslog > /dev/null;
 	then
-		${ECHO} "O pacote rsyslog ja esta instalado"
+		${ECHO} ${MC} "${GREEN} O pacote rsyslog ja esta instalado ${UNCOLOR}"
 	else
-		${ECHO} "O pacote do rsyslog sera instalado"
+		${ECHO} ${MC} "${GREEN} O pacote do rsyslog sera instalado ${UNCOLOR}"
 		$YUM install rsyslog
 	fi
 fi
 }
 
 pam_security() {
+${ECHO} ${MC} "${GREEN} Ajuste das permissoes do PAM ${UNCOLOR}"
 if [[ $i == 2 ]] || [[ $i == 3 ]]
 then
   $ECHO "password    requisite     pam_cracklib.so try_first_pass retry=3 type=difok=3 minlen=8 dcredit=1 lcredit=1 ucredit=1 ocredit=1" >> /etc/pam.d/common-password
@@ -230,16 +231,16 @@ fi
 }
 
 systemlogs_perm() {
-$ECHO "Ajuste das permissoes de logs"
+${ECHO} ${MC} "${GREEN} Ajuste das permissoes de logs ${UNCOLOR}"
 $FIND /var/log/ -type f -exec $CHMOD 600 {} \;
 
 $CHMOD +t /var/tmp
 $CHMOD +t /tmp
 
-$ECHO "Ajuste das permissoes do arquivo wtmp"
+${ECHO} ${MC} "${GREEN} Ajuste das permissoes do arquivo wtmp ${UNCOLOR}"
 if ls /var/log/ | $GREP wtmp > /dev/null
 then 
-	$ECHO "o arquivo wtmp ja existe"
+	${ECHO} ${MC} "${GREEN} O arquivo wtmp ja existe ${UNCOLOR}"
 	$CHMOD 640 /var/log/wtmp
 else
 	$TOUCH /var/log/wtmp
@@ -248,17 +249,17 @@ fi
 }
 
 home_perm() {
-$ECHO "Ajuste das permissoes do home"
+${ECHO} ${MC} "${GREEN} Ajuste das permissoes do home ${UNCOLOR}"
 $FIND /home/ -type d -exec $CHMOD 700 {} \;
 
 $CHMOD 755 /home
 }
 
 change_remoteroot(){
-$ECHO "Validando o arquivo securetty"
+${ECHO} ${MC} "${GREEN} Validando o arquivo securetty ${UNCOLOR}"
 if ls /etc/ | $GREP securetty > /dev/null
 then
-	$ECHO "O arquivo securetty ja existe"
+	${ECHO} ${MC} "${GREEN} O arquivo securetty ja existe ${UNCOLOR}"
 else
 	$TOUCH /etc/securetty
 	$CHMOD 640 /etc/securetty
@@ -277,10 +278,10 @@ fi
 }
 
 ch_crond() {
-$ECHO "Validando o arquivo cron.allow"
+${ECHO} ${MC} "${GREEN} Validando o arquivo cron.allow ${UNCOLOR}"
 if ls /etc/ | $GREP cron.allow  > /dev/null
 then
-	$ECHO "O arquivo cron.allow ja existe"
+	${ECHO} ${MC} "${GREEN} O arquivo cron.allow ja existe ${UNCOLOR}"
 	$ECHO "root" >> cron.allow
 else
 	$TOUCH /etc/cron.allow
@@ -290,10 +291,10 @@ root
 EOF
 fi
 
-$ECHO "Validando o arquivo cron.deny"
+${ECHO} ${MC} "${GREEN} Validando o arquivo cron.deny ${UNCOLOR}"
 if ls /etc/ | $GREP cron.deny  > /dev/null
 then
-	$ECHO "O arquivo cron.deny ja existe"
+	${ECHO} ${MC} "${GREEN} O arquivo cron.deny ja existe ${UNCOLOR}"
 	$CAT <<EOF > /etc/cron.deny
 bin
 daemon
@@ -355,23 +356,23 @@ fi
 }
 
 add_group_wheel() {
-$ECHO "Validando o grupo wheel"
+${ECHO} ${MC} "${GREEN} Validando o grupo wheel ${UNCOLOR}"
 if $CAT /etc/group | $GREP wheel > /dev/null
 then
-	$ECHO "O grupo wheel ja existe"
+	${ECHO} ${MC} "${GREEN} O grupo wheel ja existe ${UNCOLOR}"
 	$USERMOD -a -G wheel root
 else
 	groupadd wheel
-	$ECHO "grupo wheel criado"
+	${ECHO} ${MC} "${GREEN} O grupo wheel foi criado ${UNCOLOR}"
 	$USERMOD -a -G wheel root
 fi
 }
 
 change_banner() {
-$ECHO "Validando /etc/motd"
+${ECHO} ${MC} "${GREEN} Validando /etc/motd ${UNCOLOR}"
 if ls /etc | $GREP motd > /dev/null
 then 
-	$ECHO "O arquivo motd ja existe"
+	${ECHO} ${MC} "${GREEN} O arquivo /etc/motd ja existe ${UNCOLOR}"
 	$CAT <<EOF > /etc/motd
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
@@ -397,10 +398,10 @@ Em caso de problemas envie email para l-monitor-sec@uolinc.com
 EOF
 fi
 
-$ECHO "Validando /etc/issue.net"
+${ECHO} ${MC} "${GREEN} Validando /etc/issue.net ${UNCOLOR}"
 if ls /etc | $GREP issue.net > /dev/null
 then 
-	$ECHO "o arquivo motd ja existe"
+	${ECHO} ${MC} "${GREEN} O arquivo issue.net ja existe ${UNCOLOR}"
 	$CAT <<EOF > /etc/issue.net
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
@@ -430,21 +431,21 @@ fi
 change_login_defs() {
 UMASK=`$CAT /etc/login.defs | $GREP UMASK | $TAIL -1 | $AWK '{ print $2 }'`
 if [ $UMASK -eq 077 ]; then
-    $ECHO "O valor do umask ja esta alterado"
+	${ECHO} ${MC} "${GREEN} O valor do umask ja esta alterado ${UNCOLOR}"
 else
-    $ECHO "Alterando o valor do umask para o recomendado"
+	${ECHO} ${MC} "${GREEN} Alterando o valor do umask para o recomendado ${UNCOLOR}"
     $ECHO "$($SED 's/022/077/' /etc/login.defs)" > /etc/login.defs
     $UMASKBIN 077
 	if [[ $i == 2 ]] || [[ $i == 3 ]]
 	then
-		$ECHO "O valor do umask ja alterado"
+		${ECHO} ${MC} "${GREEN} O valor do umask ja alterado ${UNCOLOR}"
 	elif [[ $i == 1 ]] || [[ $i == 4 ]]
 	then
 		$ECHO "$($SED 's/umask 022/umask 077/' /etc/bashrc)" > /etc/bashrc
 	fi
 fi
 
-$ECHO "Ajustando a validacao de senhas:"
+${ECHO} ${MC} "${GREEN} Ajustando os parametros de senhas: ${UNCOLOR}"
 $SED -i -- 's/PASS_MIN_LEN/#PASS_MIN_LEN/g' /etc/login.defs
 $SED -i -- 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs
 $SED -i -- 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs
@@ -462,7 +463,7 @@ $ECHO "export TMOUT" >> /etc/profile
 }
 
 remove_nologin() {
-$ECHO "Removendo permissao de login"
+${ECHO} ${MC} "${GREEN} Removendo permissao de login ${UNCOLOR}"
 $USERMOD --shell $NOLOGIN bin
 $USERMOD --shell $NOLOGIN daemon
 $USERMOD --shell $NOLOGIN adm
@@ -484,7 +485,7 @@ $USERMOD --shell $NOLOGIN sshd
 }
 
 change_perm_passwd() {
-$ECHO "Ajustando permissoes de arquivos de senhas"
+${ECHO} ${MC} "${GREEN} Ajustando permissoes de arquivos de senhas ${UNCOLOR}"
 $CHOWN root:root /etc/passwd
 $CHOWN root:root /etc/shadow
 $CHOWN root:root /etc/group
@@ -497,7 +498,7 @@ $CHMOD 600 /etc/logrotate.conf
 }
 
 change_perm_crontab() {
-$ECHO "Ajustando permissoes do crontab e cron"
+${ECHO} ${MC} "${GREEN} Ajustando permissoes do crontab e cron ${UNCOLOR}"
 $CHOWN root:root /etc/crontab
 $CHMOD 600 /etc/crontab
 
@@ -514,7 +515,7 @@ $CHMOD -R go-rwx /etc/cron.d
 }
 
 chnage_suids()  {
-$ECHO "Ajustando SUID dos binarios"
+${ECHO} ${MC} "${GREEN} Ajustando SUID dos binarios ${UNCOLOR}"
 $CHMOD "u-s" $MOUNT
 $CHMOD "u-s" $UMOUNT
 $CHMOD "u-s" $NETREPORT
@@ -544,7 +545,7 @@ $CHMOD "755" $WRITE
 }
 
 ssh_security() {
-$ECHO "Ajustando os parametros do SSHD:"
+${ECHO} ${MC} "${GREEN} Ajustando os parametros do SSHD: ${UNCOLOR}"
 $SED -i -- 's/Protocol/#Protocol/g' /etc/ssh/sshd_config
 $SED -i -- 's/UsePrivilegeSeparation/#UsePrivilegeSeparation/g' /etc/ssh/sshd_config
 $SED -i -- 's/RSAAuthentication/#RSAAuthentication/g' /etc/ssh/sshd_config
@@ -596,16 +597,16 @@ $ECHO "MaxStartups 3:50:6" >> /etc/ssh/sshd_config
 
 change_syslogsrv() {
 # Defina um syslog server
-${ECHO} ${MN} "Aplicando (Defina um syslog server)  "
+${ECHO} ${MC} "${GREEN} Aplicando (Defina um syslog server) ${UNCOLOR}"
 $ECHO "*.* @10.154.4.103:514" >> /etc/rsyslog.conf
 }
 
 
 kernel_security() {
-$ECHO "Validando o arquivo sysctl.conf"
+${ECHO} ${MC} "${GREEN} Validando o arquivo sysctl.conf ${UNCOLOR}"
 if ls /etc/ | $GREP sysctl.conf  > /dev/null
 then
-        $ECHO "o arquivo sysctl.conf ja existe"
+		${ECHO} ${MC} "${GREEN} O arquivo sysctl.conf ja existe ${UNCOLOR}"
         $CAT <<EOF > /etc/sysctl.conf
 net.ipv4.ip_forward = 0
 net.ipv4.conf.all.send_redirects = 0
@@ -625,7 +626,7 @@ fi
 }
 
 disable_coredump() {
-$ECHO "Desabilitando core dump:"
+${ECHO} ${MC} "${GREEN} Desabilitando core dump: ${UNCOLOR}"
 $ECHO "* hard core 0" >> /etc/security/limits.conf
 $ECHO "fs.suid_dumpable = 0" >> /etc/sysctl.conf
 }
