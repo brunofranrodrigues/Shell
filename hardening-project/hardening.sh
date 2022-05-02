@@ -159,7 +159,7 @@ ${ECHO} ""
 verify_logrotate(){
 if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
-	if $DPKG -l | $GREP logrotate > /dev/null;
+	if ${DPKG} -l | ${GREP} logrotate > /dev/null;
 	then
 		${ECHO} ${MC} "${GREEN} O pacote logrotate ja esta instalado ${UNCOLOR}"
 	else
@@ -168,22 +168,22 @@ then
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
 then
-	if $RPM -qa | $GREP logrotate > /dev/null;
+	if ${RPM} -qa | ${GREP} logrotate > /dev/null;
 	then
 		${ECHO} ${MC} "${GREEN} O pacote logrotate ja esta instalado ${UNCOLOR}"
 	else
 		${ECHO} ${MC} "${GREEN} O pacote do logrotate sera instalado ${UNCOLOR}"
-		$YUM install logrotate
+		${YUM} install logrotate
 	fi
 fi
 }
 
 change_logrotate() {
 ${ECHO} ${MC} "${GREEN} Ajustando os parametros do logrotate:  ${UNCOLOR}"
-$SED -i -- 's/create/create 0600 root root/g' /etc/logrotate.conf
+${SED} -i -- 's/create/create 0600 root root/g' /etc/logrotate.conf
 
 
-$CAT <<EOF >> /etc/logrotate.conf
+${CAT} <<EOF >> /etc/logrotate.conf
 /var/log/wtmp {
     monthly
     minsize 1M
@@ -196,21 +196,21 @@ EOF
 verify_rsyslog(){
 if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
-	if $DPKG -l | $GREP rsyslog > /dev/null;
+	if ${DPKG} -l | ${GREP} rsyslog > /dev/null;
 	then
 		${ECHO} ${MC} "${GREEN} O pacote rsyslog ja esta instalado ${UNCOLOR}"
 	else
 		${ECHO} ${MC} "${GREEN} O pacote do rsyslog sera instalado ${UNCOLOR}"
-		$APTGET install rsyslog
+		${APTGET} install rsyslog
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
 then
-	if $RPM -qa | $GREP rsyslog > /dev/null;
+	if ${RPM} -qa | ${GREP} rsyslog > /dev/null;
 	then
 		${ECHO} ${MC} "${GREEN} O pacote rsyslog ja esta instalado ${UNCOLOR}"
 	else
 		${ECHO} ${MC} "${GREEN} O pacote do rsyslog sera instalado ${UNCOLOR}"
-		$YUM install rsyslog
+		${YUM} install rsyslog
 	fi
 fi
 }
@@ -241,29 +241,29 @@ ${ECHO} ${MC} "${GREEN} Ajuste das permissoes do arquivo wtmp ${UNCOLOR}"
 if ls /var/log/ | $GREP wtmp > /dev/null
 then 
 	${ECHO} ${MC} "${GREEN} O arquivo wtmp ja existe ${UNCOLOR}"
-	$CHMOD 640 /var/log/wtmp
+	${CHMOD} 640 /var/log/wtmp
 else
-	$TOUCH /var/log/wtmp
-	$CHMOD 640 /var/log/wtmp
+	${TOUCH} /var/log/wtmp
+	${CHMOD} 640 /var/log/wtmp
 fi
 }
 
 home_perm() {
 ${ECHO} ${MC} "${GREEN} Ajuste das permissoes do home ${UNCOLOR}"
-$FIND /home/ -type d -exec $CHMOD 700 {} \;
+${FIND} /home/ -type d -exec ${CHMOD} 700 {} \;
 
-$CHMOD 755 /home
+${CHMOD} 755 /home
 }
 
 change_remoteroot(){
 ${ECHO} ${MC} "${GREEN} Validando o arquivo securetty ${UNCOLOR}"
-if ls /etc/ | $GREP securetty > /dev/null
+if ls /etc/ | ${GREP} securetty > /dev/null
 then
 	${ECHO} ${MC} "${GREEN} O arquivo securetty ja existe ${UNCOLOR}"
 else
-	$TOUCH /etc/securetty
-	$CHMOD 640 /etc/securetty
-	$CAT <<EOF > /etc/securetty
+	${TOUCH} /etc/securetty
+	${CHMOD} 640 /etc/securetty
+	${CAT} <<EOF > /etc/securetty
 console
 tty1
 tty2
@@ -279,23 +279,23 @@ fi
 
 ch_crond() {
 ${ECHO} ${MC} "${GREEN} Validando o arquivo cron.allow ${UNCOLOR}"
-if ls /etc/ | $GREP cron.allow  > /dev/null
+if ls /etc/ | ${GREP} cron.allow  > /dev/null
 then
 	${ECHO} ${MC} "${GREEN} O arquivo cron.allow ja existe ${UNCOLOR}"
-	$ECHO "root" >> cron.allow
+	${ECHO} "root" >> cron.allow
 else
-	$TOUCH /etc/cron.allow
-	$CHMOD 600 /etc/cron.allow
-	$CAT <<EOF > /etc/cron.allow
+	${TOUCH} /etc/cron.allow
+	${CHMOD} 600 /etc/cron.allow
+	${CAT} <<EOF > /etc/cron.allow
 root
 EOF
 fi
 
 ${ECHO} ${MC} "${GREEN} Validando o arquivo cron.deny ${UNCOLOR}"
-if ls /etc/ | $GREP cron.deny  > /dev/null
+if ls /etc/ | ${GREP} cron.deny  > /dev/null
 then
 	${ECHO} ${MC} "${GREEN} O arquivo cron.deny ja existe ${UNCOLOR}"
-	$CAT <<EOF > /etc/cron.deny
+	${CAT} <<EOF > /etc/cron.deny
 bin
 daemon
 adm
@@ -323,9 +323,9 @@ nslcd
 tcpdump
 EOF
 else
-	$TOUCH /etc/cron.deny
-	$CHMOD 600 /etc/cron.deny
-	$CAT <<EOF > /etc/cron.deny
+	${TOUCH} /etc/cron.deny
+	${CHMOD} 600 /etc/cron.deny
+	${CAT} <<EOF > /etc/cron.deny
 bin
 daemon
 adm
@@ -357,23 +357,23 @@ fi
 
 add_group_wheel() {
 ${ECHO} ${MC} "${GREEN} Validando o grupo wheel ${UNCOLOR}"
-if $CAT /etc/group | $GREP wheel > /dev/null
+if ${CAT} /etc/group | ${GREP} wheel > /dev/null
 then
 	${ECHO} ${MC} "${GREEN} O grupo wheel ja existe ${UNCOLOR}"
-	$USERMOD -a -G wheel root
+	${USERMOD} -a -G wheel root
 else
 	groupadd wheel
 	${ECHO} ${MC} "${GREEN} O grupo wheel foi criado ${UNCOLOR}"
-	$USERMOD -a -G wheel root
+	${USERMOD} -a -G wheel root
 fi
 }
 
 change_banner() {
 ${ECHO} ${MC} "${GREEN} Validando /etc/motd ${UNCOLOR}"
-if ls /etc | $GREP motd > /dev/null
+if ls /etc | ${GREP} motd > /dev/null
 then 
 	${ECHO} ${MC} "${GREEN} O arquivo /etc/motd ja existe ${UNCOLOR}"
-	$CAT <<EOF > /etc/motd
+	${CAT} <<EOF > /etc/motd
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
 E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
@@ -384,9 +384,9 @@ Em caso de problemas envie email para l-monitor-sec@uolinc.com
 --------------------------------------------------------------------------------
 EOF
 else
-	$TOUCH /etc/motd
-	$CHMOD 640 /etc/motd
-	$CAT <<EOF > /etc/motd
+	${TOUCH} /etc/motd
+	${CHMOD} 640 /etc/motd
+	${CAT} <<EOF > /etc/motd
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
 E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
@@ -399,10 +399,10 @@ EOF
 fi
 
 ${ECHO} ${MC} "${GREEN} Validando /etc/issue.net ${UNCOLOR}"
-if ls /etc | $GREP issue.net > /dev/null
+if ls /etc | ${GREP} issue.net > /dev/null
 then 
 	${ECHO} ${MC} "${GREEN} O arquivo issue.net ja existe ${UNCOLOR}"
-	$CAT <<EOF > /etc/issue.net
+	${CAT} <<EOF > /etc/issue.net
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
 E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
@@ -413,9 +413,9 @@ Em caso de problemas envie email para l-monitor-sec@uolinc.com
 --------------------------------------------------------------------------------
 EOF
 else
-	$TOUCH /etc/issue.net
-	$CHMOD 640 /etc/issue.net
-	$CAT <<EOF > /etc/issue.net
+	${TOUCH} /etc/issue.net
+	${CHMOD} 640 /etc/issue.net
+	${CAT} <<EOF > /etc/issue.net
 --------------------------------------------------------------------------------
                         ATENCAO: Aviso Importante
 E proibido o acesso nao autorizado. Esse e um recurso de acesso restrito
@@ -429,194 +429,194 @@ fi
 }
 
 change_login_defs() {
-UMASK=`$CAT /etc/login.defs | $GREP UMASK | $TAIL -1 | $AWK '{ print $2 }'`
+UMASK=`${CAT} /etc/login.defs | ${GREP} UMASK | ${TAIL} -1 | ${AWK} '{ print $2 }'`
 if [ $UMASK -eq 077 ]; then
 	${ECHO} ${MC} "${GREEN} O valor do umask ja esta alterado ${UNCOLOR}"
 else
 	${ECHO} ${MC} "${GREEN} Alterando o valor do umask para o recomendado ${UNCOLOR}"
-    $ECHO "$($SED 's/022/077/' /etc/login.defs)" > /etc/login.defs
-    $UMASKBIN 077
+    ${ECHO} "$(${SED} 's/022/077/' /etc/login.defs)" > /etc/login.defs
+    ${UMASKBIN} 077
 	if [[ $i == 2 ]] || [[ $i == 3 ]]
 	then
 		${ECHO} ${MC} "${GREEN} O valor do umask ja alterado ${UNCOLOR}"
 	elif [[ $i == 1 ]] || [[ $i == 4 ]]
 	then
-		$ECHO "$($SED 's/umask 022/umask 077/' /etc/bashrc)" > /etc/bashrc
+		${ECHO} "$(${SED} 's/umask 022/umask 077/' /etc/bashrc)" > /etc/bashrc
 	fi
 fi
 
 ${ECHO} ${MC} "${GREEN} Ajustando os parametros de senhas: ${UNCOLOR}"
-$SED -i -- 's/PASS_MIN_LEN/#PASS_MIN_LEN/g' /etc/login.defs
-$SED -i -- 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs
-$SED -i -- 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs
-$SED -i -- 's/PASS_WARN_AGE/#PASS_WARN_AGE/g' /etc/login.defs
+${SED} -i -- 's/PASS_MIN_LEN/#PASS_MIN_LEN/g' /etc/login.defs
+${SED} -i -- 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs
+${SED} -i -- 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs
+${SED} -i -- 's/PASS_WARN_AGE/#PASS_WARN_AGE/g' /etc/login.defs
 
-$ECHO "PASS_MIN_LEN 8" >> /etc/login.defs
-$ECHO "PASS_MAX_DAYS 90" >> /etc/login.defs
-$ECHO "PASS_MIN_DAYS 3" >> /etc/login.defs
-$ECHO "PASS_WARN_AGE 7" >> /etc/login.defs
+${ECHO} "PASS_MIN_LEN 8" >> /etc/login.defs
+${ECHO} "PASS_MAX_DAYS 90" >> /etc/login.defs
+${ECHO} "PASS_MIN_DAYS 3" >> /etc/login.defs
+${ECHO} "PASS_WARN_AGE 7" >> /etc/login.defs
 }
 
 change_tmout() {
-$ECHO "readonly TMOUT=7200" >> /etc/profile
-$ECHO "export TMOUT" >> /etc/profile
+${ECHO} "readonly TMOUT=7200" >> /etc/profile
+${ECHO} "export TMOUT" >> /etc/profile
 }
 
 remove_nologin() {
 ${ECHO} ${MC} "${GREEN} Removendo permissao de login ${UNCOLOR}"
-$USERMOD --shell $NOLOGIN bin
-$USERMOD --shell $NOLOGIN daemon
-$USERMOD --shell $NOLOGIN adm
-$USERMOD --shell $NOLOGIN lp
-$USERMOD --shell $NOLOGIN sync
-$USERMOD --shell $NOLOGIN shutdown
-$USERMOD --shell $NOLOGIN halt
-$USERMOD --shell $NOLOGIN mail
-$USERMOD --shell $NOLOGIN uucp
-$USERMOD --shell $NOLOGIN operator
-$USERMOD --shell $NOLOGIN games
-$USERMOD --shell $NOLOGIN gopher
-$USERMOD --shell $NOLOGIN ftp
-$USERMOD --shell $NOLOGIN nobody
-$USERMOD --shell $NOLOGIN vcsa
-$USERMOD --shell $NOLOGIN saslauth
-$USERMOD --shell $NOLOGIN postfix
-$USERMOD --shell $NOLOGIN sshd
+${USERMOD} --shell ${NOLOGIN} bin
+${USERMOD} --shell ${NOLOGIN} daemon
+${USERMOD} --shell ${NOLOGIN} adm
+${USERMOD} --shell ${NOLOGIN} lp
+${USERMOD} --shell ${NOLOGIN} sync
+${USERMOD} --shell ${NOLOGIN} shutdown
+${USERMOD} --shell ${NOLOGIN} halt
+${USERMOD} --shell ${NOLOGIN} mail
+${USERMOD} --shell ${NOLOGIN} uucp
+${USERMOD} --shell ${NOLOGIN} operator
+${USERMOD} --shell ${NOLOGIN} games
+${USERMOD} --shell ${NOLOGIN} gopher
+${USERMOD} --shell ${NOLOGIN} ftp
+${USERMOD} --shell ${NOLOGIN} nobody
+${USERMOD} --shell ${NOLOGIN} vcsa
+${USERMOD} --shell ${NOLOGIN} saslauth
+${USERMOD} --shell ${NOLOGIN} postfix
+${USERMOD} --shell ${NOLOGIN} sshd
 }
 
 change_perm_passwd() {
 ${ECHO} ${MC} "${GREEN} Ajustando permissoes de arquivos de senhas ${UNCOLOR}"
-$CHOWN root:root /etc/passwd
-$CHOWN root:root /etc/shadow
-$CHOWN root:root /etc/group
-$CHOWN root:root /etc/gshadow
-$CHMOD 644 /etc/passwd
-$CHMOD 644 /etc/group
-$CHMOD 000 /etc/shadow
-$CHMOD 000 /etc/gshadow
-$CHMOD 600 /etc/logrotate.conf
+${CHOWN} root:root /etc/passwd
+${CHOWN} root:root /etc/shadow
+${CHOWN} root:root /etc/group
+${CHOWN} root:root /etc/gshadow
+${CHMOD} 644 /etc/passwd
+${CHMOD} 644 /etc/group
+${CHMOD} 000 /etc/shadow
+${CHMOD} 000 /etc/gshadow
+${CHMOD} 600 /etc/logrotate.conf
 }
 
 change_perm_crontab() {
 ${ECHO} ${MC} "${GREEN} Ajustando permissoes do crontab e cron ${UNCOLOR}"
-$CHOWN root:root /etc/crontab
-$CHMOD 600 /etc/crontab
+${CHOWN} root:root /etc/crontab
+${CHMOD} 600 /etc/crontab
 
-$CHOWN -R root:root /etc/cron.hourly
-$CHOWN -R root:root /etc/cron.daily
-$CHOWN -R root:root /etc/cron.weekly
-$CHOWN -R root:root /etc/cron.monthly
-$CHOWN -R root:root /etc/cron.d
-$CHMOD -R go-rwx /etc/cron.hourly
-$CHMOD -R go-rwx /etc/cron.daily
-$CHMOD -R go-rwx /etc/cron.weekly
-$CHMOD -R go-rwx /etc/cron.monthly
-$CHMOD -R go-rwx /etc/cron.d
+${CHOWN} -R root:root /etc/cron.hourly
+${CHOWN} -R root:root /etc/cron.daily
+${CHOWN} -R root:root /etc/cron.weekly
+${CHOWN} -R root:root /etc/cron.monthly
+${CHOWN} -R root:root /etc/cron.d
+${CHMOD} -R go-rwx /etc/cron.hourly
+${CHMOD} -R go-rwx /etc/cron.daily
+${CHMOD} -R go-rwx /etc/cron.weekly
+${CHMOD} -R go-rwx /etc/cron.monthly
+${CHMOD} -R go-rwx /etc/cron.d
 }
 
 chnage_suids()  {
 ${ECHO} ${MC} "${GREEN} Ajustando SUID dos binarios ${UNCOLOR}"
-$CHMOD "u-s" $MOUNT
-$CHMOD "u-s" $UMOUNT
-$CHMOD "u-s" $NETREPORT
-$CHMOD "u-s" $AT
-$CHMOD "u-s" $CHAGE
-$CHMOD "u-s" $CHFN
-$CHMOD "u-s" $CHSH
-$CHMOD "u-s" $GPASSWD
-$CHMOD "u-s" $LOCATE
-$CHMOD "u-s" $NEWGRP
-$CHMOD "u-s" $SSHAGENT
-$CHMOD "u-s" $WALL
-$CHMOD "u-s" $WRITE
-$CHMOD "755" $MOUNT
-$CHMOD "755" $UMOUNT
-$CHMOD "755" $NETREPORT
-$CHMOD "755" $AT
-$CHMOD "755" $CHAGE
-$CHMOD "755" $CHFN
-$CHMOD "755" $CHSH
-$CHMOD "755" $GPASSWD
-$CHMOD "755" $LOCATE
-$CHMOD "755" $NEWGRP
-$CHMOD "755" $SSHAGENT
-$CHMOD "755" $WALL
-$CHMOD "755" $WRITE
+${CHMOD} 'u-s' ${MOUNT}
+${CHMOD} 'u-s' ${UMOUNT}
+${CHMOD} 'u-s' ${NETREPORT}
+${CHMOD} 'u-s' ${AT}
+${CHMOD} 'u-s' ${CHAGE}
+${CHMOD} 'u-s' ${CHFN}
+${CHMOD} 'u-s' ${CHSH}
+${CHMOD} 'u-s' ${GPASSWD}
+${CHMOD} 'u-s' ${LOCATE}
+${CHMOD} 'u-s' ${NEWGRP}
+${CHMOD} 'u-s' ${SSHAGENT}
+${CHMOD} 'u-s' ${WALL}
+${CHMOD} 'u-s' ${WRITE}
+${CHMOD} '755' ${MOUNT}
+${CHMOD} '755' ${UMOUNT}
+${CHMOD} '755' ${NETREPORT}
+${CHMOD} '755' ${AT}
+${CHMOD} '755' ${CHAGE}
+${CHMOD} '755' ${CHFN}
+${CHMOD} '755' ${CHSH}
+${CHMOD} '755' ${GPASSWD}
+${CHMOD} '755' ${LOCATE}
+${CHMOD} '755' ${NEWGRP}
+${CHMOD} '755' ${SSHAGENT}
+${CHMOD} '755' ${WALL}
+${CHMOD} '755' ${WRITE}
 }
 
 ssh_security() {
 ${ECHO} ${MC} "${GREEN} Ajustando os parametros do SSHD: ${UNCOLOR}"
-$SED -i -- 's/Protocol/#Protocol/g' /etc/ssh/sshd_config
-$SED -i -- 's/UsePrivilegeSeparation/#UsePrivilegeSeparation/g' /etc/ssh/sshd_config
-$SED -i -- 's/RSAAuthentication/#RSAAuthentication/g' /etc/ssh/sshd_config
-$SED -i -- 's/RhostsRSAAuthentication/#RhostsRSAAuthentication/g' /etc/ssh/sshd_config
-$SED -i -- 's/GSSAPIAuthentication/#GSSAPIAuthentication/g' /etc/ssh/sshd_config
-$SED -i -- 's/PermitEmptyPasswords/#PermitEmptyPasswords/g' /etc/ssh/sshd_config
-$SED -i -- 's/PermitRootLogin/#PermitRootLogin/g' /etc/ssh/sshd_config
-$SED -i -- 's/IgnoreRhosts/#IgnoreRhosts/g' /etc/ssh/sshd_config
-$SED -i -- 's/LoginGraceTime/#LoginGraceTime/g' /etc/ssh/sshd_config
-$SED -i -- 's/MaxAuthTries/#MaxAuthTries/g' /etc/ssh/sshd_config
-$SED -i -- 's/StrictModes/#StrictModes/g' /etc/ssh/sshd_config
-$SED -i -- 's/SyslogFacility/#SyslogFacility/g' /etc/ssh/sshd_config
-$SED -i -- 's/AllowTcpForwarding/#AllowTcpForwarding/g' /etc/ssh/sshd_config
-$SED -i -- 's/X11Forwarding/#X11Forwarding/g' /etc/ssh/sshd_config
-$SED -i -- 's/TCPKeepAlive/#TCPKeepAlive/g' /etc/ssh/sshd_config
-$SED -i -- 's/LoginGraceTime/#LoginGraceTime/g' /etc/ssh/sshd_config
-$SED -i -- 's/U$SEDNS/#U$SEDNS/g' /etc/ssh/sshd_config
-$SED -i -- 's/GSSAPIAuthenti$CATion/#GSSAPIAuthenti$CATion/g' /etc/ssh/sshd_config
-$SED -i -- 's/KerberosAuthenti$CATion/#KerberosAuthenti$CATion/g' /etc/ssh/sshd_config
-$SED -i -- 's/PubkeyAuthenti$CATion/#PubkeyAuthenti$CATion/g' /etc/ssh/sshd_config
-$SED -i -- 's/PasswordAuthenti$CATion/#PasswordAuthenti$CATion/g' /etc/ssh/sshd_config
-$SED -i -- 's/ChallengeResponseAuthenti$CATion/#ChallengeResponseAuthenti$CATion/g' /etc/ssh/sshd_config
-$SED -i -- 's/MaxStartups/#MaxStartups/g' /etc/ssh/sshd_config
+${SED} -i -- 's/Protocol/#Protocol/g' /etc/ssh/sshd_config
+${SED} -i -- 's/UsePrivilegeSeparation/#UsePrivilegeSeparation/g' /etc/ssh/sshd_config
+${SED} -i -- 's/RSAAuthentication/#RSAAuthentication/g' /etc/ssh/sshd_config
+${SED} -i -- 's/RhostsRSAAuthentication/#RhostsRSAAuthentication/g' /etc/ssh/sshd_config
+${SED} -i -- 's/GSSAPIAuthentication/#GSSAPIAuthentication/g' /etc/ssh/sshd_config
+${SED} -i -- 's/PermitEmptyPasswords/#PermitEmptyPasswords/g' /etc/ssh/sshd_config
+${SED} -i -- 's/PermitRootLogin/#PermitRootLogin/g' /etc/ssh/sshd_config
+${SED} -i -- 's/IgnoreRhosts/#IgnoreRhosts/g' /etc/ssh/sshd_config
+${SED} -i -- 's/LoginGraceTime/#LoginGraceTime/g' /etc/ssh/sshd_config
+${SED} -i -- 's/MaxAuthTries/#MaxAuthTries/g' /etc/ssh/sshd_config
+${SED} -i -- 's/StrictModes/#StrictModes/g' /etc/ssh/sshd_config
+${SED} -i -- 's/SyslogFacility/#SyslogFacility/g' /etc/ssh/sshd_config
+${SED} -i -- 's/AllowTcpForwarding/#AllowTcpForwarding/g' /etc/ssh/sshd_config
+${SED} -i -- 's/X11Forwarding/#X11Forwarding/g' /etc/ssh/sshd_config
+${SED} -i -- 's/TCPKeepAlive/#TCPKeepAlive/g' /etc/ssh/sshd_config
+${SED} -i -- 's/LoginGraceTime/#LoginGraceTime/g' /etc/ssh/sshd_config
+${SED} -i -- 's/U$SEDNS/#U$SEDNS/g' /etc/ssh/sshd_config
+${SED} -i -- 's/GSSAPIAuthenti$CATion/#GSSAPIAuthenti$CATion/g' /etc/ssh/sshd_config
+${SED} -i -- 's/KerberosAuthenti$CATion/#KerberosAuthenti$CATion/g' /etc/ssh/sshd_config
+${SED} -i -- 's/PubkeyAuthenti$CATion/#PubkeyAuthenti$CATion/g' /etc/ssh/sshd_config
+${SED} -i -- 's/PasswordAuthenti$CATion/#PasswordAuthenti$CATion/g' /etc/ssh/sshd_config
+${SED} -i -- 's/ChallengeResponseAuthenti$CATion/#ChallengeResponseAuthenti$CATion/g' /etc/ssh/sshd_config
+${SED} -i -- 's/MaxStartups/#MaxStartups/g' /etc/ssh/sshd_config
 
-$ECHO "Protocol 2" >> /etc/ssh/sshd_config
-$ECHO "PermitEmptyPasswords no" >> /etc/ssh/sshd_config
-$ECHO "PermitRootLogin no" >> /etc/ssh/sshd_config
-$ECHO "IgnoreRhosts yes" >> /etc/ssh/sshd_config
-$ECHO "LoginGraceTime 45" >> /etc/ssh/sshd_config
-$ECHO "MaxAuthTries 3" >> /etc/ssh/sshd_config
-$ECHO "StrictModes yes" >> /etc/ssh/sshd_config
-$ECHO "AllowTcpForwarding no" >> /etc/ssh/sshd_config
-$ECHO "SyslogFacility AUTHPRIV" >> /etc/ssh/sshd_config
-$ECHO "X11Forwarding no" >> /etc/ssh/sshd_config
-$ECHO "TCPKeepAlive yes" >> /etc/ssh/sshd_config
-$ECHO "LoginGraceTime 30" >> /etc/ssh/sshd_config
-$ECHO "UseDNS no" >> /etc/ssh/sshd_config
-$ECHO "GSSAPIAuthenti$CATion no" >> /etc/ssh/sshd_config
-$ECHO "KerberosAuthenti$CATion no" >> /etc/ssh/sshd_config
-$ECHO "PubkeyAuthenti$CATion no" >> /etc/ssh/sshd_config
-$ECHO "PasswordAuthenti$CATion yes" >> /etc/ssh/sshd_config
-$ECHO "ChallengeResponseAuthenti$CATion no" >> /etc/ssh/sshd_config
-$ECHO "UsePrivilegeSeparation yes" >> /etc/ssh/sshd_config
-$ECHO "RSAAuthentication no" >> /etc/ssh/sshd_config
-$ECHO "RhostsRSAAuthentication no" >> /etc/ssh/sshd_config
-$ECHO "GSSAPIAuthentication no" >> /etc/ssh/sshd_config
-$ECHO "MaxStartups 3:50:6" >> /etc/ssh/sshd_config
+${ECHO} "Protocol 2" >> /etc/ssh/sshd_config
+${ECHO} "PermitEmptyPasswords no" >> /etc/ssh/sshd_config
+${ECHO} "PermitRootLogin no" >> /etc/ssh/sshd_config
+${ECHO} "IgnoreRhosts yes" >> /etc/ssh/sshd_config
+${ECHO} "LoginGraceTime 45" >> /etc/ssh/sshd_config
+${ECHO} "MaxAuthTries 3" >> /etc/ssh/sshd_config
+${ECHO} "StrictModes yes" >> /etc/ssh/sshd_config
+${ECHO} "AllowTcpForwarding no" >> /etc/ssh/sshd_config
+${ECHO} "SyslogFacility AUTHPRIV" >> /etc/ssh/sshd_config
+${ECHO} "X11Forwarding no" >> /etc/ssh/sshd_config
+${ECHO} "TCPKeepAlive yes" >> /etc/ssh/sshd_config
+${ECHO} "LoginGraceTime 30" >> /etc/ssh/sshd_config
+${ECHO} "UseDNS no" >> /etc/ssh/sshd_config
+${ECHO} "GSSAPIAuthenti$CATion no" >> /etc/ssh/sshd_config
+${ECHO} "KerberosAuthenti$CATion no" >> /etc/ssh/sshd_config
+${ECHO} "PubkeyAuthenti$CATion no" >> /etc/ssh/sshd_config
+${ECHO} "PasswordAuthenti$CATion yes" >> /etc/ssh/sshd_config
+${ECHO} "ChallengeResponseAuthenti$CATion no" >> /etc/ssh/sshd_config
+${ECHO} "UsePrivilegeSeparation yes" >> /etc/ssh/sshd_config
+${ECHO} "RSAAuthentication no" >> /etc/ssh/sshd_config
+${ECHO} "RhostsRSAAuthentication no" >> /etc/ssh/sshd_config
+${ECHO} "GSSAPIAuthentication no" >> /etc/ssh/sshd_config
+${ECHO} "MaxStartups 3:50:6" >> /etc/ssh/sshd_config
 }
 
 change_syslogsrv() {
 # Defina um syslog server
 ${ECHO} ${MC} "${GREEN} Aplicando (Defina um syslog server) ${UNCOLOR}"
-$ECHO "*.* @10.154.4.103:514" >> /etc/rsyslog.conf
+${ECHO} "*.* @10.154.4.103:514" >> /etc/rsyslog.conf
 }
 
 
 kernel_security() {
 ${ECHO} ${MC} "${GREEN} Validando o arquivo sysctl.conf ${UNCOLOR}"
-if ls /etc/ | $GREP sysctl.conf  > /dev/null
+if ls /etc/ | ${GREP} sysctl.conf  > /dev/null
 then
 		${ECHO} ${MC} "${GREEN} O arquivo sysctl.conf ja existe ${UNCOLOR}"
-        $CAT <<EOF > /etc/sysctl.conf
+        ${CAT} <<EOF > /etc/sysctl.conf
 net.ipv4.ip_forward = 0
 net.ipv4.conf.all.send_redirects = 0
 net.ipv4.conf.default.send_redirects = 0
 net.ipv4.icmp_$ECHO_ignore_broadcasts=1
 EOF
 else
-        $TOUCH /etc/sysctl.conf
-        $CHMOD 600 /etc/sysctl.conf
-        $CAT <<EOF > /etc/sysctl.conf
+        ${TOUCH} /etc/sysctl.conf
+        ${CHMOD} 600 /etc/sysctl.conf
+        ${CAT} <<EOF > /etc/sysctl.conf
 net.ipv4.ip_forward = 0
 net.ipv4.conf.all.send_redirects = 0
 net.ipv4.conf.default.send_redirects = 0
@@ -627,8 +627,8 @@ fi
 
 disable_coredump() {
 ${ECHO} ${MC} "${GREEN} Desabilitando core dump: ${UNCOLOR}"
-$ECHO "* hard core 0" >> /etc/security/limits.conf
-$ECHO "fs.suid_dumpable = 0" >> /etc/sysctl.conf
+${ECHO} "* hard core 0" >> /etc/security/limits.conf
+${ECHO} "fs.suid_dumpable = 0" >> /etc/sysctl.conf
 }
 
 chk_rootuser
