@@ -219,23 +219,23 @@ pam_security() {
 ${ECHO} ${MC} "${GREEN} Ajuste das permissoes do PAM ${UNCOLOR}"
 if [[ $i == 2 ]] || [[ $i == 3 ]]
 then
-  $ECHO "password    requisite     pam_cracklib.so try_first_pass retry=3 type=difok=3 minlen=8 dcredit=1 lcredit=1 ucredit=1 ocredit=1" >> /etc/pam.d/common-password
-  $ECHO "password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=4" >> /etc/pam.d/common-password
-  $ECHO "auth         required        pam_wheel.so wheel" >> /etc/pam.d/su
+  ${ECHO} "password    requisite     pam_cracklib.so try_first_pass retry=3 type=difok=3 minlen=8 dcredit=1 lcredit=1 ucredit=1 ocredit=1" >> /etc/pam.d/common-password
+  ${ECHO} "password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=4" >> /etc/pam.d/common-password
+  ${ECHO} "auth         required        pam_wheel.so wheel" >> /etc/pam.d/su
 elif [[ $i == 1 ]] || [[ $i == 4 ]]
 then
-  $ECHO "password    requisite     pam_cracklib.so try_first_pass retry=3 type=difok=3 minlen=8 dcredit=1 lcredit=1 ucredit=1 ocredit=1" >> /etc/pam.d/system-auth
-  $ECHO "password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=4" >> /etc/pam.d/system-auth
-  $ECHO "auth         required        pam_wheel.so wheel" >> /etc/pam.d/su
+  ${ECHO} "password    requisite     pam_cracklib.so try_first_pass retry=3 type=difok=3 minlen=8 dcredit=1 lcredit=1 ucredit=1 ocredit=1" >> /etc/pam.d/system-auth
+  ${ECHO} "password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=4" >> /etc/pam.d/system-auth
+  ${ECHO} "auth         required        pam_wheel.so wheel" >> /etc/pam.d/su
 fi
 }
 
 systemlogs_perm() {
 ${ECHO} ${MC} "${GREEN} Ajuste das permissoes de logs ${UNCOLOR}"
-$FIND /var/log/ -type f -exec $CHMOD 600 {} \;
+${FIND} /var/log/ -type f -exec $CHMOD 600 {} \;
 
-$CHMOD +t /var/tmp
-$CHMOD +t /tmp
+${CHMOD} +t /var/tmp
+${CHMOD} +t /tmp
 
 ${ECHO} ${MC} "${GREEN} Ajuste das permissoes do arquivo wtmp ${UNCOLOR}"
 if ls /var/log/ | $GREP wtmp > /dev/null
