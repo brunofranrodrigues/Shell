@@ -515,14 +515,14 @@ else
 	CentOS_Version=`${CAT} /etc/*-release | ${HEAD} -1 | ${GREP} "^CentOS" | ${AWK} '{ print $4 }'`;
 	if [[ "$CentOS_Version" == "7.9.2009" ]]; then
         for i in $ALLOWSVS; do
-			servicename=`chkconfig --list | ${GREP} ':on' | ${GREP} $i | ${AWK} '{ print $1 }'`;
-			$SERVICE $servicename stop
-			$CHKCONFIG $servicename off
+			servicename=`${CHKCONFIG} --list | ${GREP} ':on' | ${GREP} $i | ${AWK} '{ print $1 }'`;
+			${SERVICE} $servicename stop
+			${CHKCONFIG} $servicename off
 		done
 	else 
 		for i in $ALLOWSVS; do
 			servicename=`${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i | ${AWK} '{ print $1 }'`;
-			$SYSTEMCTL disable $servicename
+			${SYSTEMCTL} disable $servicename
 		done
 	fi
 fi
