@@ -54,6 +54,8 @@ SSHAGENT=`which ssh-agent`
 WALL=`which wall`
 WRITE=`which write`
 LS=`which ls`
+SYSTEMCTL=`which systemctl`
+CHKCONFIG=`chkconfig`
 opc2=0
 
 PATH=$PATH:/sbin:/bin
@@ -491,18 +493,25 @@ cmd=$(${EGREP} "^export TMOUT" /etc/profile)
 chk_unservices() {
 # Desativando servicos desnecessarios
 ${ECHO} "Checking (Desativando servicos desnecessarios)  "
-if [[ $i == 2 ]] || [[ $i == 3 ]]
+if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
 	for i in $ALLOWSVS; do
-		cmd=$(systemctl list-unit-files --type=service | grep "enabled" | grep $i)
+		cmd=$(${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i)
 		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	done
-elif [[ $i == 1 ]] || [[ $i == 4 ]]
-then
-	for i in $ALLOWSVS; do 
-		cmd=$(chkconfig --list| grep ":on" | grep $i)
-		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
-	done
+else
+	CentOS_Version=`${CAT} /etc/*-release | ${HEAD} -1 | ${GREP} "^CentOS" | ${AWK} '{ print $4 }'`;
+	if [[ "$CentOS_Version" == "7.9.2009" ]]; then
+        for i in $ALLOWSVS; do
+			cmd=$(${CHKCONFIG} --list| ${GREP} ":on" | ${GREP} $i)
+			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+		done
+	else 
+		for i in $ALLOWSVS; do
+			cmd=$(${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i)
+			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+		done
+	fi
 fi
 }
 
