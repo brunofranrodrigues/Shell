@@ -56,7 +56,7 @@ WRITE=`which write`
 LS=`which ls`
 SYSTEMCTL=`which systemctl`
 CHKCONFIG=`chkconfig`
-opc2=0
+
 
 PATH=$PATH:/sbin:/bin
 export PATH="${PATH:+$PATH:}/sbin:/usr/sbin:/bin:/usr/bin"
