@@ -56,7 +56,6 @@ SERVICE=`which service`
 SYSTEMCTL=`which systemctl`
 CHKCONFIG=`chkconfig`
 opc=0
-opc2=0
 
 # ---------------------------------------
 # Colors
@@ -70,6 +69,44 @@ MAGENTA="\033[035m"
 CYAN="\033[036m"
 WHITE="\033[037m"
 UNCOLOR="\033[0m"
+
+# ---------------------------------------
+# Servicos NAO permitidos
+# ---------------------------------------
+ALLOWSVS="abrt-ccpp
+abrt-oops
+abrtd
+acpid
+anacron
+apmd
+atd
+avahi-daemon
+bluetooth
+cups
+dkms_autoinstaller
+firstboot
+gpm
+hidd
+hplip
+isdn
+kdump
+kudzu
+messagebus
+microcode_ctl
+netconsole
+prelink
+postfix
+psacct
+pcscd
+qpidd
+rdisc
+readahead_early
+readahead_later
+rpcbind
+rpcgssd
+rpcidmapd
+saslauthd
+smart"
 
 export PATH="${PATH:+$PATH:}/sbin:/usr/sbin:/bin:/usr/bin"
 
