@@ -435,7 +435,7 @@ if [ $UMASK -eq 077 ]; then
 else
 	${ECHO} ${MC} "${GREEN} Alterando o valor do umask para o recomendado ${UNCOLOR}"
     ${ECHO} "$(${SED} 's/022/077/' /etc/login.defs)" > /etc/login.defs
-    ${UMASKBIN} 077
+    ${UMASKBIN} '077'
 	if [[ $i == 2 ]] || [[ $i == 3 ]]
 	then
 		${ECHO} ${MC} "${GREEN} O valor do umask ja alterado ${UNCOLOR}"
@@ -464,24 +464,149 @@ ${ECHO} "export TMOUT" >> /etc/profile
 
 remove_nologin() {
 ${ECHO} ${MC} "${GREEN} Removendo permissao de login ${UNCOLOR}"
-${USERMOD} --shell ${NOLOGIN} bin
-${USERMOD} --shell ${NOLOGIN} daemon
-${USERMOD} --shell ${NOLOGIN} adm
-${USERMOD} --shell ${NOLOGIN} lp
-${USERMOD} --shell ${NOLOGIN} sync
-${USERMOD} --shell ${NOLOGIN} shutdown
-${USERMOD} --shell ${NOLOGIN} halt
-${USERMOD} --shell ${NOLOGIN} mail
-${USERMOD} --shell ${NOLOGIN} uucp
-${USERMOD} --shell ${NOLOGIN} operator
-${USERMOD} --shell ${NOLOGIN} games
-${USERMOD} --shell ${NOLOGIN} gopher
-${USERMOD} --shell ${NOLOGIN} ftp
-${USERMOD} --shell ${NOLOGIN} nobody
-${USERMOD} --shell ${NOLOGIN} vcsa
-${USERMOD} --shell ${NOLOGIN} saslauth
-${USERMOD} --shell ${NOLOGIN} postfix
-${USERMOD} --shell ${NOLOGIN} sshd
+if ${CAT} /etc/passwd | ${GREP} "^bin" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario bin perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} bin
+else
+	${ECHO} ${MC} "${RED} Usuario bin nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^daemon" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario daemon perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} daemon
+else
+	${ECHO} ${MC} "${RED} Usuario daemon nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^adm" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario adm perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} adm
+else
+	${ECHO} ${MC} "${RED} Usuario adm nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^lp" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario lp perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} lp
+else
+	${ECHO} ${MC} "${RED} Usuario lp nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^sync" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario sync perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} sync
+else
+	${ECHO} ${MC} "${RED} Usuario sync nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^shutdown" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario shutdown perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} shutdown
+else
+	${ECHO} ${MC} "${RED} Usuario shutdown nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^halt" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario halt perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} halt
+else
+	${ECHO} ${MC} "${RED} Usuario halt nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^mail" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario mail perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} mail
+else
+	${ECHO} ${MC} "${RED} Usuario mail nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^uucp" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario uucp perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} uucp
+else
+	${ECHO} ${MC} "${RED} Usuario uucp nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^operator" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario operator perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} operator
+else
+	${ECHO} ${MC} "${RED} Usuario operator nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^games" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario games perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} games
+else
+	${ECHO} ${MC} "${RED} Usuario games nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^gopher" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario gopher perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} gopher
+else
+	${ECHO} ${MC} "${RED} Usuario gopher nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^ftp" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario ftp perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} ftp
+else
+	${ECHO} ${MC} "${RED} Usuario ftp nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^nobody" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario nobody perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} nobody
+else
+	${ECHO} ${MC} "${RED} Usuario nobody nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^vcsa" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario vcsa perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} vcsa
+else
+	${ECHO} ${MC} "${RED} Usuario vcsa nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^saslauth" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario saslauth perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} saslauth
+else
+	${ECHO} ${MC} "${RED} Usuario saslauth nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^postfix" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario postfix perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} postfix
+else
+	${ECHO} ${MC} "${RED} Usuario postfix nao existe ${UNCOLOR}"
+fi
+
+if ${CAT} /etc/passwd | ${GREP} "^sshd" > /dev/null
+then
+	${ECHO} ${MC} "${GREEN} Usuario sshd perdera a opcao de login ${UNCOLOR}"
+	${USERMOD} '--shell' ${NOLOGIN} sshd
+else
+	${ECHO} ${MC} "${RED} Usuario sshd nao existe ${UNCOLOR}"
+fi
 }
 
 change_perm_passwd() {
@@ -516,32 +641,134 @@ ${CHMOD} -R go-rwx /etc/cron.d
 
 chnage_suids()  {
 ${ECHO} ${MC} "${GREEN} Ajustando SUID dos binarios ${UNCOLOR}"
-${CHMOD} 'u-s' ${MOUNT}
-${CHMOD} 'u-s' ${UMOUNT}
-${CHMOD} 'u-s' ${NETREPORT}
-${CHMOD} 'u-s' ${AT}
-${CHMOD} 'u-s' ${CHAGE}
-${CHMOD} 'u-s' ${CHFN}
-${CHMOD} 'u-s' ${CHSH}
-${CHMOD} 'u-s' ${GPASSWD}
-${CHMOD} 'u-s' ${LOCATE}
-${CHMOD} 'u-s' ${NEWGRP}
-${CHMOD} 'u-s' ${SSHAGENT}
-${CHMOD} 'u-s' ${WALL}
-${CHMOD} 'u-s' ${WRITE}
-${CHMOD} '755' ${MOUNT}
-${CHMOD} '755' ${UMOUNT}
-${CHMOD} '755' ${NETREPORT}
-${CHMOD} '755' ${AT}
-${CHMOD} '755' ${CHAGE}
-${CHMOD} '755' ${CHFN}
-${CHMOD} '755' ${CHSH}
-${CHMOD} '755' ${GPASSWD}
-${CHMOD} '755' ${LOCATE}
-${CHMOD} '755' ${NEWGRP}
-${CHMOD} '755' ${SSHAGENT}
-${CHMOD} '755' ${WALL}
-${CHMOD} '755' ${WRITE}
+if which mount > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do mount ${UNCOLOR}"
+	${CHMOD} 'u-s' ${MOUNT}
+	${CHMOD} '755' ${MOUNT}
+else
+	${ECHO} ${MC} "${RED} O binario mount nao existe ${UNCOLOR}"
+fi
+
+if which umount > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do umount ${UNCOLOR}"
+	${CHMOD} 'u-s' ${UMOUNT}
+	${CHMOD} '755' ${UMOUNT}
+	
+else
+	${ECHO} ${MC} "${RED} O binario umount nao existe ${UNCOLOR}"
+fi
+
+if which netreport > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do netreport ${UNCOLOR}"
+	${CHMOD} 'u-s' ${NETREPORT}
+	${CHMOD} '755' ${NETREPORT}
+	
+else
+	${ECHO} ${MC} "${RED} O binario netreport nao existe ${UNCOLOR}"
+fi
+
+if which at > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do at ${UNCOLOR}"
+	${CHMOD} 'u-s' ${AT}
+	${CHMOD} '755' ${AT}
+	
+else
+	${ECHO} ${MC} "${RED} O binario at nao existe ${UNCOLOR}"
+fi
+
+if which chage > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do chage ${UNCOLOR}"
+	${CHMOD} 'u-s' ${CHAGE}
+	${CHMOD} '755' ${CHAGE}
+	
+else
+	${ECHO} ${MC} "${RED} O binario chage nao existe ${UNCOLOR}"
+fi
+
+if which chfn > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do chfn ${UNCOLOR}"
+	${CHMOD} 'u-s' ${CHFN}
+	${CHMOD} '755' ${CHFN}
+	
+else
+	${ECHO} ${MC} "${RED} O binario chfn nao existe ${UNCOLOR}"
+fi
+
+if which chsh > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do chfn ${UNCOLOR}"
+	${CHMOD} 'u-s' ${CHSH}
+	${CHMOD} '755' ${CHSH}
+	
+else
+	${ECHO} ${MC} "${RED} O binario chfn nao existe ${UNCOLOR}"
+fi
+
+if which gpasswd > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do gpasswd ${UNCOLOR}"
+	${CHMOD} 'u-s' ${GPASSWD}
+	${CHMOD} '755' ${GPASSWD}
+	
+else
+	${ECHO} ${MC} "${RED} O binario gpasswd nao existe ${UNCOLOR}"
+fi
+
+if which locate > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do locate ${UNCOLOR}"
+	${CHMOD} 'u-s' ${LOCATE}
+	${CHMOD} '755' ${LOCATE}
+	
+else
+	${ECHO} ${MC} "${RED} O binario locate nao existe ${UNCOLOR}"
+fi
+
+if which newgrp > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do newgrp ${UNCOLOR}"
+	${CHMOD} 'u-s' ${NEWGRP}
+	${CHMOD} '755' ${NEWGRP}
+	
+else
+	${ECHO} ${MC} "${RED} O binario newgrp nao existe ${UNCOLOR}"
+fi
+
+if which ssh-agent > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do ssh-agent ${UNCOLOR}"
+	${CHMOD} 'u-s' ${SSHAGENT}
+	${CHMOD} '755' ${SSHAGENT}
+	
+else
+	${ECHO} ${MC} "${RED} O binario ssh-agent nao existe ${UNCOLOR}"
+fi
+
+if which wall > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do wall ${UNCOLOR}"
+	${CHMOD} 'u-s' ${WALL}
+	${CHMOD} '755' ${WALL}
+	
+else
+	${ECHO} ${MC} "${RED} O binario wall nao existe ${UNCOLOR}"
+fi
+
+if which write > /dev/null;
+then
+	${ECHO} ${MC} "${GREEN} Verificando o caminho do binario do wall ${UNCOLOR}"
+	${CHMOD} 'u-s' ${WRITE}
+	${CHMOD} '755' ${WRITE}
+	
+else
+	${ECHO} ${MC} "${RED} O binario wall nao existe ${UNCOLOR}"
+fi
 }
 
 ssh_security() {
