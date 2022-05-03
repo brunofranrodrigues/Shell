@@ -95,7 +95,7 @@ fi
 
 chk_rootuser() {
 if [[ $UID -ne 0 ]]; then
-     $ECHO "$0 must be run as root"
+     ${ECHO} "$0 must be run as root"
      exit 1
 fi
 }
@@ -109,21 +109,21 @@ do
 if [[ "$OSTYPE" == "CentOS" ]]; then
         i=1
         OSVERSION=`$CAT /etc/*-release | $HEAD -1`
-        $ECHO $OSVERSION
+        ${ECHO} ${OSVERSION}
 elif [[ "$OSTYPE" == "Debian" ]]; then
         i=2
         OSVERSION=`$CAT /etc/*-release | $HEAD -1 | $AWK -F'=' {' print $2 '}`
-        $ECHO $OSVERSION
+        ${ECHO} ${OSVERSION}
 elif [[ "$OSTYPE" == "Ubuntu" ]]; then
         i=3
         OSVERSION=`$CAT /etc/*-release | $HEAD -4 | $TAIL -1 | $AWK -F'=' {' print $2 '}`
-        $ECHO $OSVERSION
+        ${ECHO} ${OSVERSION}
 elif [[ "$OSTYPE" == "Oracle" ]]; then
         i=4
         OSVERSION=`$CAT /etc/*-release | $HEAD -1`
-        $ECHO $OSVERSION
+        ${ECHO} ${OSVERSION}
 else	
-		$ECHO $Erro
+		${ECHO} ${Erro}
 fi
 
 done
@@ -141,7 +141,7 @@ if [[ $i == 1 ]] || [[ $i == 2 ]] || [[ $i == 3 ]] || [[ $i == 4 ]];
 then
 ${ECHO} "----------------------------------------------"
 else 
-${ECHO} -e $Erro
+${ECHO} -e ${Erro}
 fi
 ${ECHO} "----------------------------------------------"
 ${ECHO} ""
@@ -164,7 +164,7 @@ then
 		${ECHO} ${MC} "${GREEN} O pacote logrotate ja esta instalado ${UNCOLOR}"
 	else
 		${ECHO} ${MC} "${GREEN} O pacote do logrotate sera instalado ${UNCOLOR}"
-		$APTGET install logrotate
+		${APTGET} install logrotate
 	fi 
 elif [[ $i == 1 ]] || [[ $i == 4 ]];
 then
