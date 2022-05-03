@@ -262,20 +262,20 @@ ${ECHO} ""
 ${ECHO} "" 
 }
 
-chk_bootloader() {
+#chk_bootloader() {
 # TESTADO
 # Incluir senha no Boot Loader
-${ECHO} ${MN} "Checking (Incluir senha no Boot Loader): "
-cmd=$(${GREP} -e "^password --md5 " ${GRUBCONF})
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
+#${ECHO} ${MN} "Checking (Incluir senha no Boot Loader): "
+#cmd=$(${GREP} -e "^password --md5 " ${GRUBCONF})
+#[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+#}
 
 chk_remoteroot() {
 # TESTADO
 # Remover login remoto como super-usuario
 ${ECHO} ${MN} "Checking (Remover login remoto como super-usuario) "
 cmd=$(${GREP} -e "^vc" -e "^console" /etc/securetty)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 }
 
 chk_systemlogs_perm() {
@@ -380,9 +380,9 @@ chk_logrotate() {
 # Configurar logrotate para criar arquivos de auditagem por permissao restritiva
 ${ECHO} "Checking (Configurar logrotate para criar arquivos de auditagem por permissao restritiva) "
 cmd=$(${GREP} -e "^create 0600" /etc/logrotate.conf)
-[ $? = 0 ] && ${ECHO} ${MC} " - [logrotate.conf] create 0600 entry ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [logrotate.conf] create 0600 entry ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [logrotate.conf] create 0600 entry ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [logrotate.conf] create 0600 entry ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${GREP} -m 1 utmp /etc/logrotate.conf | ${GREP} "create 0640")
-[ $? = 0 ] && ${ECHO} ${MC} " - [logrotate.conf] utmp permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [logrotate.conf] utmp permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [logrotate.conf] utmp permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [logrotate.conf] utmp permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 }
 
 
@@ -393,11 +393,11 @@ ${ECHO} ${MN} "Checking (Definir umask padrao restritivo)  "
 if [[ $i == 2 ]] || [[ $i == 3 ]]
 then
   cmd=$(${GREP} -e '^UMASK' /etc/login.defs | grep "077")
-  [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 elif [[ $i == 1 ]] || [[ $i == 4 ]]
 then
   cmd=$(${GREP} -e "umask 077" /etc/bashrc)
-  [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 fi
 }
 
@@ -414,43 +414,43 @@ ${ECHO} "Checking (Politica de Senhas): "
 if [[ $i == 2 ]] || [[ $i == 3 ]]
 then
     cmd=$(${EGREP} "PASS_MIN_LEN.*${PASS_MIN_LEN}" /etc/login.defs)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	#cmd=$(${EGREP} "PASS_MIN_DAYS.*${PASS_MIN_DAYS}" /etc/login.defs)
-	#[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	#[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "difok=${DIFOK}" /etc/pam.d/common-password)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] difok ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] difok ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] difok ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] difok ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "minlen=${PASS_MIN_LEN}" /etc/pam.d/common-password)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] minlen ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] minlen ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] minlen ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] minlen ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "dcredit=${DCREDIT}" /etc/pam.d/common-password)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] dcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] dcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] dcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] dcredit ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "lcredit=${LCREDIT}" /etc/pam.d/common-password)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] lcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] lcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] lcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] lcredit ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "ucredit=${UCREDIT}" /etc/pam.d/common-password)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] ucredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] ucredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] ucredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] ucredit ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "ocredit=${OCREDIT}" /etc/pam.d/common-password)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] ocredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] ocredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] ocredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] ocredit ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "remember=${REMEMBER}" /etc/pam.d/common-password)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] remember ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] remember ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [common-password] remember ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [common-password] remember ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 elif [[ $i == 1 ]] || [[ $i == 4 ]]
 then
 	cmd=$(${EGREP} "PASS_MIN_LEN.*${PASS_MIN_LEN}" /etc/login.defs)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_LEN ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	#cmd=$(${EGREP} "PASS_MIN_DAYS.*${PASS_MIN_DAYS}" /etc/login.defs)
-	#[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	#[ $? = 0 ] && ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [login.defs] PASS_MIN_DAYS ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "difok=${DIFOK}" /etc/pam.d/system-auth)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] difok ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] difok ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] difok ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] difok ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "minlen=${PASS_MIN_LEN}" /etc/pam.d/system-auth)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] minlen ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] minlen ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] minlen ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] minlen ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "dcredit=${DCREDIT}" /etc/pam.d/system-auth)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] dcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] dcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] dcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] dcredit ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "lcredit=${LCREDIT}" /etc/pam.d/system-auth)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] lcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] lcredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] lcredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] lcredit ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "ucredit=${UCREDIT}" /etc/pam.d/system-auth)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ucredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ucredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ucredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ucredit ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "ocredit=${OCREDIT}" /etc/pam.d/system-auth)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ocredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ocredit ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] ocredit ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] ocredit ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	cmd=$(${EGREP} "remember=${REMEMBER}" /etc/pam.d/system-auth)
-	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] remember ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] remember ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+	[ $? = 0 ] && ${ECHO} ${MC} " - [system-auth] remember ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [system-auth] remember ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 fi
 }
 
@@ -459,18 +459,18 @@ chk_crontab() {
 ${ECHO} "Checking (Restringir o uso do crontab) "
 if [[ $i == 2 ]] || [[ $i == 3 ]]
 then
-  [ `stat -c '%a' /etc/crontab` -eq 600 ] && ${ECHO} ${MC} " - /etc/crontab permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/crontab` -eq 600 ] && ${ECHO} ${MC} " - /etc/crontab permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
   cmd=$(${LS} -ltr /etc/crontab | ${AWK} '{ print $3 }' | ${GREP} -e "root")
-  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/crontab owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/crontab owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab owner ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
   cmd=$(${GREP} root /etc/cron.allow)
-  [ $? = 0 ] && ${ECHO} ${MC} " - root listed on /etc/cron.allow ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - root listed on /etc/cron.allow ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1)) 
+  [ $? = 0 ] && ${ECHO} ${MC} " - root listed on /etc/cron.allow ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - root listed on /etc/cron.allow ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1)) 
 elif [[ $i == 1 ]] || [[ $i == 4 ]]
 then
-  [ `stat -c '%a' /etc/crontab` -eq 600 ] && ${ECHO} ${MC} " - /etc/crontab permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/crontab` -eq 600 ] && ${ECHO} ${MC} " - /etc/crontab permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
   cmd=$(${GETFACL} -p /etc/crontab | ${GREP} -e "owner: root")
-  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/crontab owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/crontab owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/crontab owner ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
   cmd=$(${GREP} root /etc/cron.allow)
-  [ $? = 0 ] && ${ECHO} ${MC} " - root listed on /etc/cron.allow ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - root listed on /etc/cron.allow ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} " - root listed on /etc/cron.allow ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - root listed on /etc/cron.allow ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 fi
 }
 
@@ -478,30 +478,30 @@ chk_timeout() {
 # Habilitar timeout para sessoes idle
 ${ECHO} ${MN} "Checking (Habilitar timeout para sessoes idle)  "
 cmd=$(${EGREP} "^export TMOUT" /etc/profile)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 }
 
-chk_etcservices() {
+#chk_etcservices() {
 # Protegendo o arquivo services no etc
-${ECHO} ${MN} "Checking (Protegendo o arquivo services no etc)  "
-cmd=$(${LSATTR} /etc/services | grep --color "\-i\-")
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
+#${ECHO} ${MN} "Checking (Protegendo o arquivo services no etc)  "
+#cmd=$(${LSATTR} /etc/services | grep --color "\-i\-")
+#[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+#}
 
 chk_unservices() {
 # Desativando servicos desnecessarios
 ${ECHO} "Checking (Desativando servicos desnecessarios)  "
 for i in $ALLOWSVS; do 
      cmd=$(chkconfig --list| grep ":on" | grep $i)
-     [ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+     [ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 done
 }
 
-chk_filesystems() {
+#chk_filesystems() {
 # Desativando uso de filesystems incomuns
 ${ECHO} ${MN} "Checking (Desativando uso de filesystems incomuns)  "
-[ -e /etc/modprobe.d/secadm.conf ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
+#[ -e /etc/modprobe.d/secadm.conf ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+#}
 
 chk_passwd() {
 ## Arquivos de usuario, grupo e senhas
@@ -510,25 +510,25 @@ ${ECHO} "Checking (Protegendo arquivos e diretorios importantes)  "
 if [[ $i == 2 ]] || [[ $i == 3 ]]
 then
   cmd=$(${LS} -ltr /etc/shadow | ${AWK} '{ print $3 }' | ${GREP} -e "root")
-  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
   cmd=$(${LS} -ltr /etc/gshadow | ${AWK} '{ print $3 }' | ${GREP} -e "root")
-  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-  [ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-  [ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 elif [[ $i == 1 ]] || [[ $i == 4 ]]
 then
   cmd=$(${GETFACL} -p /etc/shadow | ${GREP} -e "owner: root")
-  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/shadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow owner ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
   cmd=$(${GETFACL} -p /etc/gshadow | ${GREP} -e "owner: root")
-  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-  [ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-  [ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+  [ $? = 0 ] && ${ECHO} ${MC} " - /etc/gshadow owner ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow owner ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/shadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/shadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/shadow permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+  [ `stat -c '%a' /etc/gshadow` -eq 0 ] && ${ECHO} ${MC} " - /etc/gshadow permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/gshadow permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 fi
 
 # Bloquear senhas dos usuarios de sistema - BUG
 ${ECHO} ${MN} "Checking (Bloquear senhas dos usuarios de sistema)  "
 cmd=$(${GREP} bash /etc/passwd| ${GREP} -v root | ${GREP} -v "uh-"| ${GREP} -v dcadmin)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 }
 
 chk_suids() {
@@ -537,7 +537,7 @@ ${ECHO} "Checking (Remover SUID de arquivos desnecessarios)  "
 for i in $DENYSIDS; do 
      if [ -f ${i} ]; then
           cmd=$(stat -c '%a' ${i})
-          [ ${cmd} -eq 4755 ] && ${ECHO} ${MC} " - ${i} permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1)) || ${ECHO} ${MC} " - ${i} permission ${GREEN}[OK]${UNCOLOR}"
+          [ ${cmd} -eq 4755 ] && ${ECHO} ${MC} " - ${i} permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1)) || ${ECHO} ${MC} " - ${i} permission ${GREEN}[OK]${UNCOLOR}"
      else
           continue
      fi
@@ -548,7 +548,7 @@ chk_su() {
 # Limitar uso do comando su
 ${ECHO} ${MN} "Checking (Limitar uso do comando su)  "
 cmd=$(${EGREP} "^auth.*pam_wheel.so.*wheel" /etc/pam.d/su)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 }
 
 chk_homeusers() {
@@ -556,7 +556,7 @@ chk_homeusers() {
 ${ECHO} "Checking (Certifique que diretorios home de usuarios nao sao Group-Writable e World-Readable)  "
 HOMELIST=$(find /home/ -mindepth 1 -maxdepth 1 -type d)
 for i in $HOMELIST; do
-[ `stat -c '%a' ${i}` -eq 700 ] && ${ECHO} ${MC} " - ${i} permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - ${i} permission ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ `stat -c '%a' ${i}` -eq 700 ] && ${ECHO} ${MC} " - ${i} permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - ${i} permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 done
 }
 
@@ -567,7 +567,7 @@ cmd=$(find $HOMEDIR -name ".netrc")
 if [ -e $cmd ]; then
      ${ECHO} ""
      for i in $cmd; do
-          ${ECHO} ${MC} " - ${i} found ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+          ${ECHO} ${MC} " - ${i} found ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
      done
 else
      ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}"
@@ -578,9 +578,9 @@ chk_coredumps() {
 # Desabilitando core dumps
 ${ECHO} "Checking (Desabilitando core dumps)  "
 cmd=$(${EGREP} "^*.*hard.*core" /etc/security/limits.conf)
-[ $? = 0 ] && ${ECHO} ${MC} " - [limits.conf] hard core ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [limits.conf] hard core ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [limits.conf] hard core ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [limits.conf] hard core ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${GREP} "fs.suid_dumpable = 0" /etc/sysctl.conf)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sysctl.conf] fs.suid_dumpable ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sysctl.conf] fs.suid_dumpable ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sysctl.conf] fs.suid_dumpable ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sysctl.conf] fs.suid_dumpable ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 }
 
 chk_syslogsrv() {
@@ -588,12 +588,26 @@ chk_syslogsrv() {
 ${ECHO} ${MN} "Checking (Defina um syslog server)  "
 if [ -f ${SYSLOGFILE} ]; then
      cmd=$(${GREP} -e "^*.*" ${SYSLOGFILE} | ${GREP} ":514")
-     [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+     [ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 else
      ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"
-     ${ECHO} ${MC} "${YELLOW}Syslog configuration file not found, please set SYSLOGFILE setting on LVS Script${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+     ${ECHO} ${MC} "${YELLOW}Syslog configuration file not found, please set SYSLOGFILE setting on LVS Script${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 fi
 }
+
+#chk_syslogd() {
+# Restricting access by other users viewer the syslog
+#${ECHO} "Checking (Restringindo acesso de visualizacao por outros nos logs do sistema)  "
+#if [ -f ${SYSLOGFILE} ] && [ ${SYSLOGFILE} = "/etc/rsyslog.conf" ]; then
+#     SYSLOGS=`${GREP} -e '/var/log' ${SYSLOGFILE} | ${GREP} -v "programname"^ | awk -F" " {' print $2 '} | sed 's/^\-//g'`
+#     for SYSLOG in ${SYSLOGS}; do
+#          [ `stat -c '%a' ${i}` -eq 600 ] && ${ECHO} ${MC} " - logfile ${i} permission ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - logfile ${i} permission ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+#     done
+#else
+#     ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+#     ${ECHO} ${MC} "${YELLOW}Syslog configuration file not found, please set SYSLOGFILE setting on LVS Script${UNCOLOR}"
+#fi
+#}
 
 chk_motd() {
 # Tested on CentOS 6.2 x64
@@ -601,71 +615,71 @@ chk_motd() {
 ${ECHO} "Checking (Remover motd/issue padrao)  "
 
 cmd=$(${EGREP} ".*ATENCAO: Aviso Importante" /etc/motd)
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/motd content ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/motd content ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - /etc/motd content ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/motd content ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 #cmd=$(${EGREP} ".*ATENCAO: Aviso Importante" /etc/issue)
-#[ $? = 0 ] && ${ECHO} ${MC} " - /etc/issue content ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/issue content${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}; COUNTER=$(($COUNTER+1))
+#[ $? = 0 ] && ${ECHO} ${MC} " - /etc/issue content ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/issue content${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} ".*ATENCAO: Aviso Importante" /etc/issue.net)
-[ $? = 0 ] && ${ECHO} ${MC} " - /etc/issue.net content${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/issue.net content${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - /etc/issue.net content${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - /etc/issue.net content${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 }
 
-improve_pass_hash_algorithm() {
-${ECHO} ${MN} "Checking (Elevando algoritmo hash de senhas)  "
-cmd=$(${EGREP} "PASSWDALGORITHM=sha512" /etc/sysconfig/authconfig)
-[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
-}
+#improve_pass_hash_algorithm() {
+#${ECHO} ${MN} "Checking (Elevando algoritmo hash de senhas)  "
+#cmd=$(${EGREP} "PASSWDALGORITHM=sha512" /etc/sysconfig/authconfig)
+#[ $? = 0 ] && ${ECHO} ${MC} "${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} "${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+#}
 
 ssh_security() {
 ${ECHO} "Checking (SSH Security Settings)  "
 cmd=$(${EGREP} "PermitEmptyPasswords $ALLOW_EMPTY_PASS" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitEmptyPasswords ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitEmptyPasswords ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitEmptyPasswords ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitEmptyPasswords ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "PermitRootLogin $ALLOW_ROOT_LOGIN" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitRootLogin ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitRootLogin ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitRootLogin ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitRootLogin ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "IgnoreRhosts $IGNORE_RHOSTS" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] IgnoreRhosts ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] IgnoreRhosts ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] IgnoreRhosts ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] IgnoreRhosts ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "RhostsRSAAuthentication $ALLOW_RHOSTS_RSA" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] RhostsRSAAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] RhostsRSAAuthentication ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] RhostsRSAAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] RhostsRSAAuthentication ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "Protocol 2" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] Protocol ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] Protocol ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] Protocol ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] Protocol ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "UsePrivilegeSeparation yes" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UsePrivilegeSeparation ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UsePrivilegeSeparation ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UsePrivilegeSeparation ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UsePrivilegeSeparation ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "StrictModes yes" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] StrictModes ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] StrictModes ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] StrictModes ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] StrictModes ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "MaxAuthTries $MAX_AUTH_TRIES" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] MaxAuthTries ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] MaxAuthTries ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] MaxAuthTries ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] MaxAuthTries ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "AllowTcpForwarding $ALLOW_TCP_FORWARD" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] AllowTcpForwarding ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] AllowTcpForwarding ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] AllowTcpForwarding ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] AllowTcpForwarding ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "X11Forwarding $ALLOW_X11_FORWARD" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] X11Forwarding ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] X11Forwarding ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] X11Forwarding ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] X11Forwarding ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "SyslogFacility AUTHPRIV" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] SyslogFacility ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] SyslogFacility ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] SyslogFacility ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] SyslogFacility ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "LogLevel INFO" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] LogLevel ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] LogLevel ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] LogLevel ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] LogLevel ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "TCPKeepAlive $ALLOW_KEEPALIVE" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] TCPKeepAlive ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] TCPKeepAlive ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] TCPKeepAlive ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] TCPKeepAlive ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "PermitUserEnvironment no" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitUserEnvironment ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitUserEnvironment ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PermitUserEnvironment ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PermitUserEnvironment ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "LoginGraceTime $GRACE_TIME" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] LoginGraceTime ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] LoginGraceTime ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] LoginGraceTime ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] LoginGraceTime ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 #cmd=$(${EGREP} "KeyRegenerationInterval 1800" /etc/ssh/sshd_config)
-#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] KeyRegenerationInterval ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] KeyRegenerationInterval ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}; COUNTER=$(($COUNTER+1))
+#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] KeyRegenerationInterval ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] KeyRegenerationInterval ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "UseDNS $USE_DNS" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UseDNS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UseDNS ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UseDNS ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UseDNS ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 #cmd=$(${EGREP} "ServerKeyBits $SERVERKEY_BITS" /etc/ssh/sshd_config)
-#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] ServerKeyBits ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] ServerKeyBits ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}; COUNTER=$(($COUNTER+1))
+#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] ServerKeyBits ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] ServerKeyBits ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "RSAAuthentication $RSA_AUTH" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] RSAAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] RSAAuthentication ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] RSAAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] RSAAuthentication ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 #cmd=$(${EGREP} "PubkeyAuthentication $PUBKEY_AUTH" /etc/ssh/sshd_config)
-#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PubkeyAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PubkeyAuthentication ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}; COUNTER=$(($COUNTER+1))
+#[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PubkeyAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PubkeyAuthentication ${RED}[FAIL]${UNCOLOR}" ${YELLOW}ignore!${UNCOLOR}| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "ChallengeResponseAuthentication $CHALLENGE_PAM" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] ChallengeResponseAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] ChallengeResponseAuthentication ${RED}[FAIL]${UNCOLOR} "; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] ChallengeResponseAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] ChallengeResponseAuthentication ${RED}[FAIL]${UNCOLOR} "| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "KerberosAuthentication $KERBEROS_AUTH" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] KerberosAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] KerberosAuthentication ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] KerberosAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] KerberosAuthentication ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "GSSAPIAuthentication $GSSAPI_AUTH" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] GSSAPIAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] GSSAPIAuthentication ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] GSSAPIAuthentication ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] GSSAPIAuthentication ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "PrintLastLog yes" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PrintLastLog ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PrintLastLog ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] PrintLastLog ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] PrintLastLog ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 cmd=$(${EGREP} "UsePAM yes" /etc/ssh/sshd_config)
-[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UsePAM ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UsePAM ${RED}[FAIL]${UNCOLOR}"; COUNTER=$(($COUNTER+1))
+[ $? = 0 ] && ${ECHO} ${MC} " - [sshd_config] UsePAM ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [sshd_config] UsePAM ${RED}[FAIL]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 }
 
 chk_final() {
