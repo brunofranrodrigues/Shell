@@ -462,6 +462,35 @@ ${ECHO} "readonly TMOUT=7200" >> /etc/profile
 ${ECHO} "export TMOUT" >> /etc/profile
 }
 
+disabled_unservices() {
+# Desativando servicos desnecessarios
+${ECHO} "${GREEN} Checking (Desativando servicos desnecessarios) ${UNCOLOR}"
+if [[ $i == 2 ]] || [[ $i == 3 ]];
+then
+	for i in $ALLOWSVS; do
+		service=`systemctl list-unit-files --type=service | grep "enabled" | grep $i | awk '{ print $1 }'`
+		cmd=$(systemctl disable $service)
+		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${service} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${service} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+	done
+else
+	CentOS_Version=`cat /etc/*-release | head -1 | grep "^CentOS" | awk '{ print $4 }'`;
+	if [[ "$CentOS_Version" == "7.9.2009" ]]; then
+        for i in $ALLOWSVS; do
+			servicename=`chkconfig --list | grep ':on' | grep $i | awk '{ print $1 }'`;
+			service $servicename stop
+			cmd=$(chkconfig $servicename off)
+			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${service} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${service} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+		done
+	else 
+		for i in $ALLOWSVS; do
+			service=`systemctl list-unit-files --type=service | grep "enabled" | grep $i | awk '{ print $1 }'`
+			cmd=$(systemctl disable $service)
+			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${service} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${service} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+		done
+	fi
+fi
+}
+
 remove_nologin() {
 ${ECHO} ${MC} "${GREEN} Removendo permissao de login ${UNCOLOR}"
 if ${CAT} /etc/passwd | ${GREP} "^bin" > /dev/null
@@ -873,6 +902,7 @@ add_group_wheel
 change_banner
 change_login_defs
 change_tmout
+disabled_unservices
 remove_nologin
 change_perm_passwd
 change_perm_crontab
