@@ -464,7 +464,7 @@ ${ECHO} "export TMOUT" >> /etc/profile
 
 disabled_unservices() {
 # Desativando servicos desnecessarios
-${ECHO} "${GREEN} Checking (Desativando servicos desnecessarios) ${UNCOLOR}"
+${ECHO} ${MC} "${GREEN} Checking (Desativando servicos desnecessarios) ${UNCOLOR}"
 if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
 	for i in $ALLOWSVS; do
