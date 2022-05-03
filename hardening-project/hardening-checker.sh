@@ -491,10 +491,19 @@ cmd=$(${EGREP} "^export TMOUT" /etc/profile)
 chk_unservices() {
 # Desativando servicos desnecessarios
 ${ECHO} "Checking (Desativando servicos desnecessarios)  "
-for i in $ALLOWSVS; do 
-     cmd=$(chkconfig --list| grep ":on" | grep $i)
-     [ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
-done
+if [[ $i == 2 ]] || [[ $i == 3 ]]
+then
+	for i in $ALLOWSVS; do
+		cmd=$(systemctl list-unit-files --type=service | grep "enabled" | grep $i)
+		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+	done
+elif [[ $i == 1 ]] || [[ $i == 4 ]]
+then
+	for i in $ALLOWSVS; do 
+		cmd=$(chkconfig --list| grep ":on" | grep $i)
+		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+	done
+fi
 }
 
 #chk_filesystems() {
