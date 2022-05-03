@@ -468,8 +468,8 @@ ${ECHO} "${GREEN} Checking (Desativando servicos desnecessarios) ${UNCOLOR}"
 if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
 	for i in $ALLOWSVS; do
-		service=`systemctl list-unit-files --type=service | grep "enabled" | grep $i | awk '{ print $1 }'`
-		cmd=$(systemctl disable $service)
+		servicename=`systemctl list-unit-files --type=service | grep "enabled" | grep $i | awk '{ print $1 }'`;
+		cmd=$(systemctl disable $servicename)
 		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${service} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${service} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 	done
 else
@@ -483,8 +483,8 @@ else
 		done
 	else 
 		for i in $ALLOWSVS; do
-			service=`systemctl list-unit-files --type=service | grep "enabled" | grep $i | awk '{ print $1 }'`
-			cmd=$(systemctl disable $service)
+			servicename=`systemctl list-unit-files --type=service | grep "enabled" | grep $i | awk '{ print $1 }'`;
+			cmd=$(systemctl disable $servicename)
 			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${service} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${service} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
 		done
 	fi
