@@ -728,5 +728,5 @@ chk_syslogsrv
 chk_motd
 ssh_security
 #improve_pass_hash_algorithm
-#chk_final
+chk_final
 #rm -f $0
