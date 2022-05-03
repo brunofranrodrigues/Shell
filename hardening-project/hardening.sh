@@ -52,6 +52,9 @@ SSHAGENT=`which ssh-agent`
 WALL=`which wall`
 WRITE=`which write`
 UMASKBIN=`which umask`
+SERVICE=`which service`
+SYSTEMCTL=`which systemctl`
+CHKCONFIG=`chkconfig`
 opc=0
 opc2=0
 
@@ -430,7 +433,7 @@ fi
 
 change_login_defs() {
 UMASK=`${CAT} /etc/login.defs | ${GREP} UMASK | ${TAIL} -1 | ${AWK} '{ print $2 }'`
-if [ $UMASK -eq 077 ]; then
+if [ $UMASK -eq '077' ]; then
 	${ECHO} ${MC} "${GREEN} O valor do umask ja esta alterado ${UNCOLOR}"
 else
 	${ECHO} ${MC} "${GREEN} Alterando o valor do umask para o recomendado ${UNCOLOR}"
@@ -468,24 +471,21 @@ ${ECHO} ${MC} "${GREEN} Checking (Desativando servicos desnecessarios) ${UNCOLOR
 if [[ $i == 2 ]] || [[ $i == 3 ]];
 then
 	for i in $ALLOWSVS; do
-		servicename=`systemctl list-unit-files --type=service | grep "enabled" | grep $i | awk '{ print $1 }'`;
-		cmd=$(systemctl disable $servicename)
-		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${service} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${service} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+		servicename=`${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i | ${AWK} '{ print $1 }'`;
+		$SYSTEMCTL disable $servicename
 	done
 else
-	CentOS_Version=`cat /etc/*-release | head -1 | grep "^CentOS" | awk '{ print $4 }'`;
+	CentOS_Version=`${CAT} /etc/*-release | ${HEAD} -1 | ${GREP} "^CentOS" | ${AWK} '{ print $4 }'`;
 	if [[ "$CentOS_Version" == "7.9.2009" ]]; then
         for i in $ALLOWSVS; do
-			servicename=`chkconfig --list | grep ':on' | grep $i | awk '{ print $1 }'`;
-			service $servicename stop
-			cmd=$(chkconfig $servicename off)
-			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${service} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${service} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+			servicename=`chkconfig --list | ${GREP} ':on' | ${GREP} $i | ${AWK} '{ print $1 }'`;
+			$SERVICE $servicename stop
+			$CHKCONFIG $servicename off
 		done
 	else 
 		for i in $ALLOWSVS; do
-			servicename=`systemctl list-unit-files --type=service | grep "enabled" | grep $i | awk '{ print $1 }'`;
-			cmd=$(systemctl disable $servicename)
-			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${service} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${service} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+			servicename=`${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i | ${AWK} '{ print $1 }'`;
+			$SYSTEMCTL disable $servicename
 		done
 	fi
 fi
