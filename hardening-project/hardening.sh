@@ -52,9 +52,7 @@ SSHAGENT=`which ssh-agent`
 WALL=`which wall`
 WRITE=`which write`
 UMASKBIN=`which umask`
-SERVICE=`which service`
 SYSTEMCTL=`which systemctl`
-CHKCONFIG=`chkconfig`
 opc=0
 
 # ---------------------------------------
@@ -505,27 +503,11 @@ ${ECHO} "export TMOUT" >> /etc/profile
 disabled_unservices() {
 # Desativando servicos desnecessarios
 ${ECHO} ${MC} "${GREEN} Checking (Desativando servicos desnecessarios) ${UNCOLOR}"
-if [[ $i == 2 ]] || [[ $i == 3 ]];
-then
 	for i in $ALLOWSVS; do
 		servicename=`${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i | ${AWK} '{ print $1 }'`;
+		$SYSTEMCTL stop $servicename
 		$SYSTEMCTL disable $servicename
 	done
-else
-	CentOS_Version=`${CAT} /etc/*-release | ${HEAD} -1 | ${GREP} "^CentOS" | ${AWK} '{ print $4 }'`;
-	if [[ "$CentOS_Version" == "7.9.2009" ]]; then
-        for i in $ALLOWSVS; do
-			servicename=`${CHKCONFIG} --list | ${GREP} ':on' | ${GREP} $i | ${AWK} '{ print $1 }'`;
-			${SERVICE} $servicename stop
-			${CHKCONFIG} $servicename off
-		done
-	else 
-		for i in $ALLOWSVS; do
-			servicename=`${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i | ${AWK} '{ print $1 }'`;
-			${SYSTEMCTL} disable $servicename
-		done
-	fi
-fi
 }
 
 remove_nologin() {
