@@ -1,10 +1,10 @@
 #!/bin/bash
 ##############################################################################
-# v0.1                                                                       #
+# v0.5                                                                       #
 # ============================================                               #
 #                                                                            #
 # Copyright (c) 2022 by Bruno Rodrigues - brunofranrodrigues@gmail.com       #
-# Last Updated 24/04/2022                                                    #
+# Last Updated 04/05/2022                                                    #
 #                                                                            #
 # This program is free software. You can redistribute it and/or modify       #
 # it under the terms of the GNU General Public License as published by       #
