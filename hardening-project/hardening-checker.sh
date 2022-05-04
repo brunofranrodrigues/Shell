@@ -56,7 +56,7 @@ WRITE=`which write`
 LS=`which ls`
 SYSTEMCTL=`which systemctl`
 CHKCONFIG=`chkconfig`
-
+opc2=0
 
 PATH=$PATH:/sbin:/bin
 export PATH="${PATH:+$PATH:}/sbin:/usr/sbin:/bin:/usr/bin"
@@ -493,26 +493,10 @@ cmd=$(${EGREP} "^export TMOUT" /etc/profile)
 chk_unservices() {
 # Desativando servicos desnecessarios
 ${ECHO} "Checking (Desativando servicos desnecessarios)  "
-if [[ $i == 2 ]] || [[ $i == 3 ]];
-then
 	for i in $ALLOWSVS; do
-		cmd=$(${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i)
-		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
+		cmd=$(${SYSTEMCTL} list-unit-files --state=disabled | ${GREP} $i)
+		[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}" || ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" | COUNTER=$(($COUNTER+1))
 	done
-else
-	CentOS_Version=`${CAT} /etc/*-release | ${HEAD} -1 | ${GREP} "^CentOS" | ${AWK} '{ print $4 }'`;
-	if [[ "$CentOS_Version" == "7.9.2009" ]]; then
-        for i in $ALLOWSVS; do
-			cmd=$(${CHKCONFIG} --list| ${GREP} ":on" | ${GREP} $i)
-			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
-		done
-	else 
-		for i in $ALLOWSVS; do
-			cmd=$(${SYSTEMCTL} list-unit-files --type=service | ${GREP} "enabled" | ${GREP} $i)
-			[ $? = 0 ] && ${ECHO} ${MC} " - [services] ${i} ${RED}[FAIL]${UNCOLOR} - disable it!" || ${ECHO} ${MC} " - [services] ${i} ${GREEN}[OK]${UNCOLOR}"| COUNTER=$(($COUNTER+1))
-		done
-	fi
-fi
 }
 
 #chk_filesystems() {
