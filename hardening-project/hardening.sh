@@ -848,7 +848,7 @@ ${SED} -i -- 's/MaxStartups/#MaxStartups/g' /etc/ssh/sshd_config
 ${ECHO} "Protocol 2" >> /etc/ssh/sshd_config
 ${ECHO} "PermitEmptyPasswords no" >> /etc/ssh/sshd_config
 ${ECHO} "PermitRootLogin no" >> /etc/ssh/sshd_config
-${ECHO} "IgnoreRhosts yes" >> /etc/ssh/sshd_config
+#${ECHO} "IgnoreRhosts yes" >> /etc/ssh/sshd_config
 ${ECHO} "LoginGraceTime 45" >> /etc/ssh/sshd_config
 ${ECHO} "MaxAuthTries 3" >> /etc/ssh/sshd_config
 ${ECHO} "StrictModes yes" >> /etc/ssh/sshd_config
@@ -858,14 +858,14 @@ ${ECHO} "X11Forwarding no" >> /etc/ssh/sshd_config
 ${ECHO} "TCPKeepAlive yes" >> /etc/ssh/sshd_config
 ${ECHO} "LoginGraceTime 30" >> /etc/ssh/sshd_config
 ${ECHO} "UseDNS no" >> /etc/ssh/sshd_config
-${ECHO} "GSSAPIAuthenti$CATion no" >> /etc/ssh/sshd_config
-${ECHO} "KerberosAuthenti$CATion no" >> /etc/ssh/sshd_config
-${ECHO} "PubkeyAuthenti$CATion no" >> /etc/ssh/sshd_config
-${ECHO} "PasswordAuthenti$CATion yes" >> /etc/ssh/sshd_config
-${ECHO} "ChallengeResponseAuthenti$CATion no" >> /etc/ssh/sshd_config
-${ECHO} "UsePrivilegeSeparation yes" >> /etc/ssh/sshd_config
-${ECHO} "RSAAuthentication no" >> /etc/ssh/sshd_config
-${ECHO} "RhostsRSAAuthentication no" >> /etc/ssh/sshd_config
+${ECHO} "GSSAPIAuthentication no" >> /etc/ssh/sshd_config
+${ECHO} "KerberosAuthentication no" >> /etc/ssh/sshd_config
+${ECHO} "PubkeyAuthentication no" >> /etc/ssh/sshd_config
+${ECHO} "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+${ECHO} "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
+#${ECHO} "UsePrivilegeSeparation yes" >> /etc/ssh/sshd_config
+#${ECHO} "RSAAuthentication no" >> /etc/ssh/sshd_config
+#${ECHO} "RhostsRSAAuthentication no" >> /etc/ssh/sshd_config
 ${ECHO} "GSSAPIAuthentication no" >> /etc/ssh/sshd_config
 ${ECHO} "MaxStartups 3:50:6" >> /etc/ssh/sshd_config
 }
